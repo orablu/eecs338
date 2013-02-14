@@ -1,0 +1,272 @@
+9340  execve("./main", ["./main"], [/* 26 vars */]) = 0
+9340  brk(0)                            = 0x69f000
+9340  access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+9340  mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f6a2951c000
+9340  access("/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
+9340  open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+9340  fstat(3, {st_mode=S_IFREG|0644, st_size=64113, ...}) = 0
+9340  mmap(NULL, 64113, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f6a2950c000
+9340  close(3)                          = 0
+9340  access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+9340  open("/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+9340  read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\200\30\2\0\0\0\0\0"..., 832) = 832
+9340  fstat(3, {st_mode=S_IFREG|0755, st_size=1811128, ...}) = 0
+9340  mmap(NULL, 3925208, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f6a28f3d000
+9340  mprotect(0x7f6a290f2000, 2093056, PROT_NONE) = 0
+9340  mmap(0x7f6a292f1000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1b4000) = 0x7f6a292f1000
+9340  mmap(0x7f6a292f7000, 17624, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f6a292f7000
+9340  close(3)                          = 0
+9340  mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f6a2950b000
+9340  mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f6a2950a000
+9340  mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f6a29509000
+9340  arch_prctl(ARCH_SET_FS, 0x7f6a2950a700) = 0
+9340  mprotect(0x7f6a292f1000, 16384, PROT_READ) = 0
+9340  mprotect(0x601000, 4096, PROT_READ) = 0
+9340  mprotect(0x7f6a2951e000, 4096, PROT_READ) = 0
+9340  munmap(0x7f6a2950c000, 64113)     = 0
+9340  fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 57), ...}) = 0
+9340  mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f6a2951b000
+9340  write(1, "STARTING AGENT\n", 15)  = 15
+9340  write(1, "\n", 1)                 = 1
+9340  uname({sys="Linux", node="eecslinab4", ...}) = 0
+9340  write(1, "AGENT INFO:\n", 12)     = 12
+9340  getpid()                          = 9340
+9340  write(1, " HOSTNAME: eecslinab4\n", 22) = 22
+9340  getuid()                          = 1585613645
+9340  write(1, " PID:      9340\n", 16) = 16
+9340  brk(0)                            = 0x69f000
+9340  brk(0x6c0000)                     = 0x6c0000
+9340  open("/etc/localtime", O_RDONLY|O_CLOEXEC) = 3
+9340  fstat(3, {st_mode=S_IFREG|0644, st_size=3519, ...}) = 0
+9340  fstat(3, {st_mode=S_IFREG|0644, st_size=3519, ...}) = 0
+9340  mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f6a2951a000
+9340  read(3, "TZif2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\4\0\0\0\4\0\0\0\0"..., 4096) = 3519
+9340  lseek(3, -2252, SEEK_CUR)         = 1267
+9340  read(3, "TZif2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\5\0\0\0\5\0\0\0\0"..., 4096) = 2252
+9340  close(3)                          = 0
+9340  munmap(0x7f6a2951a000, 4096)      = 0
+9340  write(1, " UID:      1585613645\n", 22) = 22
+9340  write(1, " TIME:     Tue Feb  5 18:21:33 2"..., 36) = 36
+9340  write(1, "\n", 1)                 = 1
+9340  write(1, "FORKING THREE SMOKERS!\n", 23) = 23
+9340  clone(child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f6a2950a9d0) = 9341
+9340  write(1, "SMOKER S1\n", 10 <unfinished ...>
+9341  write(1, "SMOKER: 9341\n", 13)    = 13
+9340  <... write resumed> )             = 10
+9340  clone( <unfinished ...>
+9341  write(1, "PAPER AVAILABLE! P: 0\n", 22 <unfinished ...>
+9340  <... clone resumed> child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f6a2950a9d0) = 9342
+9341  <... write resumed> )             = 22
+9340  write(1, "SMOKER S2\n", 10 <unfinished ...>
+9342  rt_sigprocmask(SIG_BLOCK, [CHLD],  <unfinished ...>
+9341  write(1, "TOBACCO AVAILABLE! T: 2\n", 24 <unfinished ...>
+9340  <... write resumed> )             = 10
+9341  <... write resumed> )             = 24
+9340  clone( <unfinished ...>
+9342  <... rt_sigprocmask resumed> [], 8) = 0
+9341  write(1, "MATCHES AVAILABLE! M: 3\n", 24 <unfinished ...>
+9340  <... clone resumed> child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f6a2950a9d0) = 9343
+9342  rt_sigaction(SIGCHLD, NULL,  <unfinished ...>
+9341  <... write resumed> )             = 24
+9340  write(1, "SMOKER S3\n", 10 <unfinished ...>
+9342  <... rt_sigaction resumed> {SIG_DFL, [], 0}, 8) = 0
+9341  rt_sigprocmask(SIG_BLOCK, [CHLD],  <unfinished ...>
+9343  rt_sigprocmask(SIG_BLOCK, [CHLD],  <unfinished ...>
+9341  <... rt_sigprocmask resumed> [], 8) = 0
+9343  <... rt_sigprocmask resumed> [], 8) = 0
+9341  rt_sigaction(SIGCHLD, NULL,  <unfinished ...>
+9343  rt_sigaction(SIGCHLD, NULL,  <unfinished ...>
+9340  <... write resumed> )             = 10
+9343  <... rt_sigaction resumed> {SIG_DFL, [], 0}, 8) = 0
+9341  <... rt_sigaction resumed> {SIG_DFL, [], 0}, 8) = 0
+9343  rt_sigprocmask(SIG_SETMASK, [],  <unfinished ...>
+9341  rt_sigprocmask(SIG_SETMASK, [],  <unfinished ...>
+9343  <... rt_sigprocmask resumed> NULL, 8) = 0
+9341  <... rt_sigprocmask resumed> NULL, 8) = 0
+9343  nanosleep({2, 0},  <unfinished ...>
+9341  nanosleep({3, 0},  <unfinished ...>
+9340  wait4(-1,  <unfinished ...>
+9342  rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+9342  nanosleep({1, 0}, 0x7fffd1f70610) = 0
+9342  write(1, "SMOKER: 9342\n", 13)    = 13
+9342  write(1, "NO PAPER!\n", 10)       = 10
+9342  exit_group(9342)                  = ?
+9340  <... wait4 resumed> [{WIFEXITED(s) && WEXITSTATUS(s) == 126}], 0, NULL) = 9342
+9340  --- SIGCHLD (Child exited) @ 0 (0) ---
+9340  wait4(-1,  <unfinished ...>
+9343  <... nanosleep resumed> 0x7fffd1f70610) = 0
+9343  write(1, "SMOKER: 9343\n", 13)    = 13
+9343  write(1, "NO PAPER!\n", 10)       = 10
+9343  exit_group(9343)                  = ?
+9340  <... wait4 resumed> [{WIFEXITED(s) && WEXITSTATUS(s) == 127}], 0, NULL) = 9343
+9340  --- SIGCHLD (Child exited) @ 0 (0) ---
+9340  wait4(-1,  <unfinished ...>
+9341  <... nanosleep resumed> 0x7fffd1f705b0) = 0
+9341  write(1, "SMOKER: 9341\n", 13)    = 13
+9341  write(1, "NO PAPER!\n", 10)       = 10
+9341  exit_group(9341)                  = ?
+9340  <... wait4 resumed> [{WIFEXITED(s) && WEXITSTATUS(s) == 125}], 0, NULL) = 9341
+9340  --- SIGCHLD (Child exited) @ 0 (0) ---
+9340  write(1, "AGENT IS DONE!\n", 15)  = 15
+9340  write(1, "\n", 1)                 = 1
+9340  write(1, "AGENT FINISHED. RESULT: 0\n", 26) = 26
+9340  write(1, "STARTING AGENT\n", 15)  = 15
+9340  write(1, "\n", 1)                 = 1
+9340  uname({sys="Linux", node="eecslinab4", ...}) = 0
+9340  write(1, "AGENT INFO:\n", 12)     = 12
+9340  write(1, " HOSTNAME: eecslinab4\n", 22) = 22
+9340  getuid()                          = 1585613645
+9340  write(1, " PID:      9340\n", 16) = 16
+9340  stat("/etc/localtime", {st_mode=S_IFREG|0644, st_size=3519, ...}) = 0
+9340  write(1, " UID:      1585613645\n", 22) = 22
+9340  write(1, " TIME:     Tue Feb  5 18:21:36 2"..., 36) = 36
+9340  write(1, "\n", 1)                 = 1
+9340  write(1, "FORKING THREE SMOKERS!\n", 23) = 23
+9340  clone(child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f6a2950a9d0) = 9423
+9340  write(1, "SMOKER S1\n", 10)       = 10
+9340  clone( <unfinished ...>
+9423  write(1, "SMOKER: 9423\n", 13)    = 13
+9340  <... clone resumed> child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f6a2950a9d0) = 9424
+9423  write(1, "PAPER AVAILABLE! P: 1\n", 22 <unfinished ...>
+9340  write(1, "SMOKER S2\n", 10 <unfinished ...>
+9423  <... write resumed> )             = 22
+9340  <... write resumed> )             = 10
+9423  write(1, "TOBACCO AVAILABLE! T: 2\n", 24 <unfinished ...>
+9340  clone( <unfinished ...>
+9423  <... write resumed> )             = 24
+9424  rt_sigprocmask(SIG_BLOCK, [CHLD],  <unfinished ...>
+9423  write(1, "MATCHES AVAILABLE! M: 2\n", 24 <unfinished ...>
+9340  <... clone resumed> child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f6a2950a9d0) = 9425
+9423  <... write resumed> )             = 24
+9424  <... rt_sigprocmask resumed> [], 8) = 0
+9424  rt_sigaction(SIGCHLD, NULL,  <unfinished ...>
+9423  rt_sigprocmask(SIG_BLOCK, [CHLD],  <unfinished ...>
+9340  write(1, "SMOKER S3\n", 10 <unfinished ...>
+9424  <... rt_sigaction resumed> {SIG_DFL, [], 0}, 8) = 0
+9340  <... write resumed> )             = 10
+9423  <... rt_sigprocmask resumed> [], 8) = 0
+9424  rt_sigprocmask(SIG_SETMASK, [],  <unfinished ...>
+9340  wait4(-1,  <unfinished ...>
+9423  rt_sigaction(SIGCHLD, NULL,  <unfinished ...>
+9424  <... rt_sigprocmask resumed> NULL, 8) = 0
+9423  <... rt_sigaction resumed> {SIG_DFL, [], 0}, 8) = 0
+9424  nanosleep({1, 0},  <unfinished ...>
+9423  rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+9423  nanosleep({3, 0},  <unfinished ...>
+9425  rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+9425  rt_sigaction(SIGCHLD, NULL, {SIG_DFL, [], 0}, 8) = 0
+9425  rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+9425  nanosleep({2, 0},  <unfinished ...>
+9424  <... nanosleep resumed> 0x7fffd1f70610) = 0
+9424  write(1, "SMOKER: 9424\n", 13)    = 13
+9424  write(1, "PAPER AVAILABLE! P: 0\n", 22) = 22
+9424  write(1, "TOBACCO AVAILABLE! T: 1\n", 24) = 24
+9424  write(1, "MATCHES AVAILABLE! M: 1\n", 24) = 24
+9424  rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+9424  rt_sigaction(SIGCHLD, NULL, {SIG_DFL, [], 0}, 8) = 0
+9424  rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+9424  nanosleep({3, 0},  <unfinished ...>
+9425  <... nanosleep resumed> 0x7fffd1f70610) = 0
+9425  write(1, "SMOKER: 9425\n", 13)    = 13
+9425  write(1, "NO PAPER!\n", 10)       = 10
+9425  exit_group(9425)                  = ?
+9340  <... wait4 resumed> [{WIFEXITED(s) && WEXITSTATUS(s) == 209}], 0, NULL) = 9425
+9340  --- SIGCHLD (Child exited) @ 0 (0) ---
+9340  wait4(-1,  <unfinished ...>
+9423  <... nanosleep resumed> 0x7fffd1f705b0) = 0
+9423  write(1, "SMOKER: 9423\n", 13)    = 13
+9423  write(1, "NO PAPER!\n", 10)       = 10
+9423  exit_group(9423)                  = ?
+9340  <... wait4 resumed> [{WIFEXITED(s) && WEXITSTATUS(s) == 207}], 0, NULL) = 9423
+9340  --- SIGCHLD (Child exited) @ 0 (0) ---
+9340  wait4(-1,  <unfinished ...>
+9424  <... nanosleep resumed> 0x7fffd1f705b0) = 0
+9424  write(1, "SMOKER: 9424\n", 13)    = 13
+9424  write(1, "NO PAPER!\n", 10)       = 10
+9424  exit_group(9424)                  = ?
+9340  <... wait4 resumed> [{WIFEXITED(s) && WEXITSTATUS(s) == 208}], 0, NULL) = 9424
+9340  --- SIGCHLD (Child exited) @ 0 (0) ---
+9340  write(1, "AGENT IS DONE!\n", 15)  = 15
+9340  write(1, "\n", 1)                 = 1
+9340  write(1, "AGENT FINISHED. RESULT: 0\n", 26) = 26
+9340  write(1, "STARTING AGENT\n", 15)  = 15
+9340  write(1, "\n", 1)                 = 1
+9340  uname({sys="Linux", node="eecslinab4", ...}) = 0
+9340  write(1, "AGENT INFO:\n", 12)     = 12
+9340  write(1, " HOSTNAME: eecslinab4\n", 22) = 22
+9340  getuid()                          = 1585613645
+9340  write(1, " PID:      9340\n", 16) = 16
+9340  stat("/etc/localtime", {st_mode=S_IFREG|0644, st_size=3519, ...}) = 0
+9340  write(1, " UID:      1585613645\n", 22) = 22
+9340  write(1, " TIME:     Tue Feb  5 18:21:40 2"..., 36) = 36
+9340  write(1, "\n", 1)                 = 1
+9340  write(1, "FORKING THREE SMOKERS!\n", 23) = 23
+9340  clone(child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f6a2950a9d0) = 9510
+9340  write(1, "SMOKER S1\n", 10)       = 10
+9340  clone( <unfinished ...>
+9510  write(1, "SMOKER: 9510\n", 13)    = 13
+9340  <... clone resumed> child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f6a2950a9d0) = 9511
+9510  write(1, "PAPER AVAILABLE! P: 2\n", 22) = 22
+9511  rt_sigprocmask(SIG_BLOCK, [CHLD],  <unfinished ...>
+9340  write(1, "SMOKER S2\n", 10 <unfinished ...>
+9511  <... rt_sigprocmask resumed> [], 8) = 0
+9510  write(1, "TOBACCO AVAILABLE! T: 1\n", 24 <unfinished ...>
+9511  rt_sigaction(SIGCHLD, NULL,  <unfinished ...>
+9510  <... write resumed> )             = 24
+9511  <... rt_sigaction resumed> {SIG_DFL, [], 0}, 8) = 0
+9510  write(1, "MATCHES AVAILABLE! M: 2\n", 24 <unfinished ...>
+9340  <... write resumed> )             = 10
+9510  <... write resumed> )             = 24
+9511  rt_sigprocmask(SIG_SETMASK, [],  <unfinished ...>
+9510  rt_sigprocmask(SIG_BLOCK, [CHLD],  <unfinished ...>
+9340  clone( <unfinished ...>
+9511  <... rt_sigprocmask resumed> NULL, 8) = 0
+9510  <... rt_sigprocmask resumed> [], 8) = 0
+9510  rt_sigaction(SIGCHLD, NULL, {SIG_DFL, [], 0}, 8) = 0
+9511  nanosleep({1, 0},  <unfinished ...>
+9340  <... clone resumed> child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f6a2950a9d0) = 9512
+9510  rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+9340  write(1, "SMOKER S3\n", 10 <unfinished ...>
+9512  rt_sigprocmask(SIG_BLOCK, [CHLD],  <unfinished ...>
+9510  nanosleep({3, 0},  <unfinished ...>
+9512  <... rt_sigprocmask resumed> [], 8) = 0
+9340  <... write resumed> )             = 10
+9512  rt_sigaction(SIGCHLD, NULL,  <unfinished ...>
+9340  wait4(-1,  <unfinished ...>
+9512  <... rt_sigaction resumed> {SIG_DFL, [], 0}, 8) = 0
+9512  rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+9512  nanosleep({2, 0},  <unfinished ...>
+9511  <... nanosleep resumed> 0x7fffd1f70610) = 0
+9511  write(1, "SMOKER: 9511\n", 13)    = 13
+9511  write(1, "PAPER AVAILABLE! P: 1\n", 22) = 22
+9511  write(1, "TOBACCO AVAILABLE! T: 0\n", 24) = 24
+9511  write(1, "MATCHES AVAILABLE! M: 1\n", 24) = 24
+9511  rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+9511  rt_sigaction(SIGCHLD, NULL, {SIG_DFL, [], 0}, 8) = 0
+9511  rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+9511  nanosleep({3, 0},  <unfinished ...>
+9512  <... nanosleep resumed> 0x7fffd1f70610) = 0
+9512  write(1, "SMOKER: 9512\n", 13)    = 13
+9512  write(1, "PAPER AVAILABLE! P: 0\n", 22) = 22
+9512  write(1, "NO TOBACCO!\n", 12)     = 12
+9512  exit_group(9512)                  = ?
+9340  <... wait4 resumed> [{WIFEXITED(s) && WEXITSTATUS(s) == 40}], 0, NULL) = 9512
+9340  --- SIGCHLD (Child exited) @ 0 (0) ---
+9340  wait4(-1,  <unfinished ...>
+9510  <... nanosleep resumed> 0x7fffd1f705b0) = 0
+9510  write(1, "SMOKER: 9510\n", 13)    = 13
+9510  write(1, "NO PAPER!\n", 10)       = 10
+9510  exit_group(9510)                  = ?
+9340  <... wait4 resumed> [{WIFEXITED(s) && WEXITSTATUS(s) == 38}], 0, NULL) = 9510
+9340  --- SIGCHLD (Child exited) @ 0 (0) ---
+9340  wait4(-1,  <unfinished ...>
+9511  <... nanosleep resumed> 0x7fffd1f705b0) = 0
+9511  write(1, "SMOKER: 9511\n", 13)    = 13
+9511  write(1, "NO PAPER!\n", 10)       = 10
+9511  exit_group(9511)                  = ?
+9340  <... wait4 resumed> [{WIFEXITED(s) && WEXITSTATUS(s) == 39}], 0, NULL) = 9511
+9340  --- SIGCHLD (Child exited) @ 0 (0) ---
+9340  write(1, "AGENT IS DONE!\n", 15)  = 15
+9340  write(1, "\n", 1)                 = 1
+9340  write(1, "AGENT FINISHED. RESULT: 0\n", 26) = 26
+9340  exit_group(0)                     = ?
