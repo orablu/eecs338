@@ -1,0 +1,1 @@
+This method of implementing merge sort uses copies of processes for each substring, and multiple pipes for each process. This is highly inefficient, both in memory size and in that the computer can only handle so many processes (usually a system defined number) that is hit much sooner than using a regular method recursion method.

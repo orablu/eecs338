@@ -29,24 +29,24 @@ int main() {
     // Only reading one line, stop at the first newline.
     int i;
     for (i = 0; i < len; i++) {
-        if (str[i] == '\n' || str[i] == '\0') {
+        if (str[i] == '\n') {
             len = i + 1;
             break;
         }
     }
 
+    // Make sure the string terminates!
+    str[len - 1] = '\0';
+
     fprintf(stderr, "Entered main. String is %s, length is %d.\n", str, len);
     fflush(stderr);
 
-    if (len <= 2) {
+    if (len <= 2 || strlen(str) <= 2) {
         // Only one actual letter, print and be done.
         fprintf(stdout, "%s", str);
         fflush(stdout);
         return 0;
     }
-
-    // Make sure the string terminates!
-    str[len - 1] = '\0';
 
     // Begin the recursion.
     mergeSort(str, len + 1);
@@ -128,13 +128,15 @@ void mergeSort(char *str, int len) {
     fflush(stderr);
 
     // Write out the left string.
-    write(pipefd0[WEND], strleft, strlen(strleft));
+    write(pipefd0[WEND], strleft, splitllen);
     close(pipefd0[WEND]);
+    splitllen = strlen(strleft);
     free(strleft);
 
     // Write out the right string.
-    write(pipefd2[WEND], strright, strlen(strright));
+    write(pipefd2[WEND], strright, splitrlen);
     close(pipefd2[WEND]);
+    splitrlen = strlen(strright);
     free(strright);
 
     fprintf(stderr, "Process waiting for children. String is \"%s\".\n", str);
@@ -150,11 +152,11 @@ void mergeSort(char *str, int len) {
     }
 
     // Read the response.
-    char * lres = malloc(strlen(strleft));
-    ssize_t llen = read(pipefd1[REND], lres, strlen(lres));
+    char * lres = malloc(splitllen);
+    ssize_t llen = read(pipefd1[REND], lres, splitrlen);
     CLOSE(pipefd1[REND]);
-    char * rres = malloc(strlen(strright));
-    ssize_t rlen = read(pipefd3[REND], rres, strlen(rres));
+    char * rres = malloc(splitrlen);
+    ssize_t rlen = read(pipefd3[REND], rres, splitrlen);
     CLOSE(pipefd3[REND]);
 
     fprintf(stderr, "Process read results. Left result is \"%s\", right result is \"%s\".\n", lres, rres);
