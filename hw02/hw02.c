@@ -30,18 +30,17 @@ int main() {
     int i;
     for (i = 0; i < len; i++) {
         if (str[i] == '\n') {
-            len = i + 1;
+            str[len - 1] = '\0';
+            len = i;
             break;
         }
     }
 
-    // Make sure the string terminates!
-    str[len - 1] = '\0';
-
     fprintf(stderr, "Entered main. String is %s, length is %d.\n", str, len);
+    fprintf(stderr, "Strlen says %d.\n", strlen(str));
     fflush(stderr);
 
-    if (len <= 2 || strlen(str) <= 2) {
+    if (len <= 2) {
         // Only one actual letter, print and be done.
         fprintf(stdout, "%s", str);
         fflush(stdout);
@@ -49,7 +48,7 @@ int main() {
     }
 
     // Begin the recursion.
-    mergeSort(str, len + 1);
+    mergeSort(str, strlen(str));
 
     // All done!
     return 0;
@@ -117,8 +116,8 @@ void mergeSort(char *str, int len) {
     // Pipes used for left are 1 -> in, 0 -> out. Pipes used for right are 3 -> in, 2 -> out.
 
     // Divide the string into half, one for each side.
-    int splitllen = (len - 1) / 2; // One less because of the null character.
-    int splitrlen = len - (splitllen + 1); // The rest of the string, less the null character.
+    int splitllen = len / 2; // One less because of the null character.
+    int splitrlen = len - (splitllen); // The rest of the string, less the null character.
     char * strleft = malloc(splitllen + 1); strleft[splitllen] = '\0';
     char * strright = malloc(splitrlen + 1); strright[splitrlen] = '\0';
     strncpy(strleft, str, splitllen);
@@ -128,15 +127,13 @@ void mergeSort(char *str, int len) {
     fflush(stderr);
 
     // Write out the left string.
-    write(pipefd0[WEND], strleft, splitllen);
+    write(pipefd0[WEND], strleft, strlen(strleft));
     close(pipefd0[WEND]);
-    splitllen = strlen(strleft);
     free(strleft);
 
     // Write out the right string.
-    write(pipefd2[WEND], strright, splitrlen);
+    write(pipefd2[WEND], strright, strlen(strright));
     close(pipefd2[WEND]);
-    splitrlen = strlen(strright);
     free(strright);
 
     fprintf(stderr, "Process waiting for children. String is \"%s\".\n", str);
@@ -152,11 +149,11 @@ void mergeSort(char *str, int len) {
     }
 
     // Read the response.
-    char * lres = malloc(splitllen);
-    ssize_t llen = read(pipefd1[REND], lres, splitrlen);
+    char lres[BUFSIZ];
+    ssize_t llen = read(pipefd1[REND], lres, strlen(lres));
     CLOSE(pipefd1[REND]);
-    char * rres = malloc(splitrlen);
-    ssize_t rlen = read(pipefd3[REND], rres, splitrlen);
+    char rres[BUFSIZ];
+    ssize_t rlen = read(pipefd3[REND], rres, strlen(rres));
     CLOSE(pipefd3[REND]);
 
     fprintf(stderr, "Process read results. Left result is \"%s\", right result is \"%s\".\n", lres, rres);
@@ -165,7 +162,6 @@ void mergeSort(char *str, int len) {
     // Merge the strings back together.
     char * mergedstring;
     int mergedlen = sort(mergedstring, lres, rres, llen, rlen);
-    free(lres); free(rres); // Free unneeded substrings.
 
     // Return the result to the parent.
     fprintf(stderr, "Process merged string. String is \"%s\".\n", mergedstring);
@@ -198,6 +194,12 @@ void readChild(int * pipefdin, int * pipefdout, char * name) {
 // TODO: Remember to free the result when done!
 int sort(char * mergedstring, char * left, char * right, int llen, int rlen) {
     // We need one less than the sum of the sizes (only need one null terminator).
+    if (llen + rlen < 1) {
+        mergedstring = malloc(1);
+        mergedstring[0] = '\0';
+        return 1;
+    }
+
     mergedstring = malloc(llen + rlen - 1);
     mergedstring[llen + rlen - 2] = '\0';
 
@@ -221,5 +223,5 @@ int sort(char * mergedstring, char * left, char * right, int llen, int rlen) {
         }
     }
 
-    return llen + rlen - 1;
+    return strlen(mergedstring);
 }
