@@ -158,15 +158,15 @@ void readChild(int * pipefdin, int * pipefdout, char * name) {
     fprintf(stderr, "Process entered %s child. Waiting for string.\n", name);
 
     // Change pipes to stedin and stdout.
-    close(STDIN_FD);
+    CLOSE(STDIN_FD);
     dup2(pipefdin[REND], STDIN_FD);
 
-    close(STDOUT_FD);
+    CLOSE(STDOUT_FD);
     dup2(pipefdout[WEND], STDOUT_FD);
 
     // Get the present substring.
     char buf[BUFSIZ];
-    ssize_t strlen = read(stdin, buf, BUFSIZ);
+    ssize_t strlen = read(STDIN,_FD buf, BUFSIZ);
 
     fprintf(stderr, "%s child read string. String is \"%s\", length is %d.\n", name, buf, strlen);
 
