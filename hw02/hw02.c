@@ -18,6 +18,7 @@
 
 #define PIPE(pipefd) do { if (pipe(pipefd)) { perror("Error creating pipe."); _exit(errno); } } while (0)
 #define CLOSE(fd) do { int result = close(fd); if (result == -1) { perror("Error closing pipe."); _exit(errno); } } while (0)
+#define DUP2(fd1, fd2) do { int result = dup2(fd1, fd2); if (result == -1) { perror("Error duplicating pipe."); _exit(errno); } } while (0)
 
 // TODO: Close pipes as soon as done writing!
 
@@ -28,10 +29,20 @@ int main() {
     // Only reading one line, stop at the first newline.
     int i;
     for (i = 0; i < len; i++) {
-        if (str[i] == '\n') {
+        if (str[i] == '\n' || str[i] == '\0') {
             len = i + 1;
             break;
         }
+    }
+
+    fprintf(stderr, "Entered main. String is %s, length is %d.\n", str, len);
+    fflush(stderr);
+
+    if (len <= 2) {
+        // Only one actual letter, print and be done.
+        fprintf(stdout, "%s", str);
+        fflush(stdout);
+        return 0;
     }
 
     // Make sure the string terminates!
@@ -41,17 +52,17 @@ int main() {
     mergeSort(str, len + 1);
 
     // All done!
-    printf("\n");
     return 0;
 }
 
 void mergeSort(char *str, int len) {
     // Print out the string we have.
     fprintf(stderr, "Process entered mergeSort. String is \"%s\".\n", str);
+    fflush(stderr);
 
     // Create pipes.
-    int pipefd0[2], pipefd1[2], pipefd2[2], pipefd3[2];
-    PIPE(pipefd0); PIPE(pipefd1); PIPE(pipefd2); PIPE(pipefd3);
+    int pipefd0[2]; int pipefd1[2]; int pipefd2[2]; int pipefd3[2];
+    PIPE(pipefd0);  PIPE(pipefd1);  PIPE(pipefd2);  PIPE(pipefd3);
 
     /// LEFT SUBSTRING
 
@@ -73,6 +84,7 @@ void mergeSort(char *str, int len) {
     }
 
     fprintf(stderr, "Process created left child.\n");
+    fflush(stderr);
 
     /// RIGHT SUBSTRING
 
@@ -81,7 +93,7 @@ void mergeSort(char *str, int len) {
         perror("Error forking right child.");
         _exit(EXIT_FAILURE);
     }
-    else if (l_pid == 0) {
+    else if (r_pid == 0) {
         // Close pipes R013, W012
         CLOSE(pipefd0[REND]); CLOSE(pipefd1[REND]); CLOSE(pipefd3[REND]);
         CLOSE(pipefd0[WEND]); CLOSE(pipefd1[WEND]); CLOSE(pipefd2[WEND]);
@@ -94,12 +106,13 @@ void mergeSort(char *str, int len) {
     }
 
     fprintf(stderr, "Process created right child.\n");
+    fflush(stderr);
 
     /// PARENT STRING
 
     // Close pipes R13, W24
-    close(pipefd0[REND]); close(pipefd2[REND]);
-    close(pipefd1[WEND]); close(pipefd3[WEND]);
+    CLOSE(pipefd0[REND]); CLOSE(pipefd2[REND]);
+    CLOSE(pipefd1[WEND]); CLOSE(pipefd3[WEND]);
 
     // Pipes used for left are 1 -> in, 0 -> out. Pipes used for right are 3 -> in, 2 -> out.
 
@@ -112,21 +125,23 @@ void mergeSort(char *str, int len) {
     strncpy(strright, str + splitllen, splitrlen);
 
     fprintf(stderr, "Process splitting string.\n\tLeft is \"%s\", right is \"%s\".\n", strleft, strright);
+    fflush(stderr);
 
     // Write out the left string.
-    write(pipefd0[WEND], strleft, (len / 2) + 1);
+    write(pipefd0[WEND], strleft, strlen(strleft));
     close(pipefd0[WEND]);
     free(strleft);
 
     // Write out the right string.
-    write(pipefd2[WEND], strright, len - (len / 2));
+    write(pipefd2[WEND], strright, strlen(strright));
     close(pipefd2[WEND]);
     free(strright);
 
     fprintf(stderr, "Process waiting for children. String is \"%s\".\n", str);
+    fflush(stderr);
 
     // Wait for response.
-    int statusl, statusr;
+    int statusl; int statusr;
     pid_t resultl = wait(&statusl);
     pid_t resultr = wait(&statusr);
     if (resultl < 0 || resultr < 0) {
@@ -135,21 +150,27 @@ void mergeSort(char *str, int len) {
     }
 
     // Read the response.
-    char * lres = malloc((len / 2) + 1);
-    ssize_t llen = read(pipefd1[REND], lres, (len / 2) + 1);
-    char * rres = malloc(len - (len / 2));
-    ssize_t rlen = read(pipefd3[REND], rres, len - (len / 2));
+    char * lres = malloc(strlen(strleft));
+    ssize_t llen = read(pipefd1[REND], lres, strlen(lres));
+    CLOSE(pipefd1[REND]);
+    char * rres = malloc(strlen(strright));
+    ssize_t rlen = read(pipefd3[REND], rres, strlen(rres));
+    CLOSE(pipefd3[REND]);
 
     fprintf(stderr, "Process read results. Left result is \"%s\", right result is \"%s\".\n", lres, rres);
+    fflush(stderr);
 
     // Merge the strings back together.
     char * mergedstring;
-    int mergedlen = sort(mergedstring, lres, rres, (len / 2) + 1, len - (len / 2));
+    int mergedlen = sort(mergedstring, lres, rres, llen, rlen);
     free(lres); free(rres); // Free unneeded substrings.
 
     // Return the result to the parent.
     fprintf(stderr, "Process merged string. String is \"%s\".\n", mergedstring);
-    write(STDOUT_FD, mergedstring, mergedlen);
+    fflush(stderr);
+
+    fprintf(stdout, "%s", mergedstring);
+    fflush(stdout);
     free(mergedstring);
 
     // All done for this thread!
@@ -159,38 +180,22 @@ void mergeSort(char *str, int len) {
 void readChild(int * pipefdin, int * pipefdout, char * name) {
     // Print out that we entered.
     fprintf(stderr, "Process entered %s child. Waiting for string.\n", name);
+    fflush(stderr);
 
     // Change pipes to stedin and stdout.
     CLOSE(STDIN_FD);
-    dup2(pipefdin[REND], STDIN_FD);
+    DUP2(pipefdin[REND], STDIN_FD);
 
     CLOSE(STDOUT_FD);
-    dup2(pipefdout[WEND], STDOUT_FD);
+    DUP2(pipefdout[WEND], STDOUT_FD);
 
-    // Get the present substring.
-    char buf[BUFSIZ];
-    ssize_t strlen = read(STDIN_FD, buf, BUFSIZ);
-
-    fprintf(stderr, "%s child read string. String is \"%s\", length is %d.\n", name, buf, strlen);
-
-    // Are we done? (Don't forget one of the characters is the null terminator!)
-    if (strlen <= 2) {
-        // add a null character to make it a string.
-        buf[1] = '\0';
-
-        // Return the value to the parent.
-        write(STDOUT_FD, buf, BUFSIZ);
-    }
-    else {
-        // We're not done, continue
-        execlp("./main", "./main", NULL);
-    }
+    // We're not done, continue
+    execlp("./main", "./main", NULL);
 }
 
 // TODO: Remember to free the result when done!
 int sort(char * mergedstring, char * left, char * right, int llen, int rlen) {
     // We need one less than the sum of the sizes (only need one null terminator).
-    free(mergedstring);
     mergedstring = malloc(llen + rlen - 1);
     mergedstring[llen + rlen - 2] = '\0';
 
