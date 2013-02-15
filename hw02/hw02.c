@@ -25,7 +25,7 @@ int main() {
     int i;
     for (i = 0; i < len; i++) {
         if (str[i] == '\n') {
-            len = i + 1
+            len = i + 1;
             break;
         }
     }
@@ -37,6 +37,7 @@ int main() {
     mergeSort(str, len + 1);
 
     // All done!
+    printf("\n");
     return EXIT_SUCCESS;
 }
 
@@ -55,44 +56,18 @@ void mergeSort(char *str, int len) {
         _exit(EXIT_FAILURE);
     }
     else if (l_pid == 0) {
-        // Left child process. Change pipe information, then repeat function.
-        fprintf(stderr, "Process entered left child. Waiting for string.\n");
-
         // Close pipes R123, W023
         close(pipefd1[REND]); close(pipefd2[REND]); close(pipefd3[REND]);
         close(pipefd0[WEND]); close(pipefd2[WEND]); close(pipefd3[WEND]);
 
-        // Pipes used are 0 -> stdin, 1 -> sdtout
-        close(STDIN_FD);
-        dup2(pipefd0[REND], STDIN_FD);
-
-        close(STDOUT_FD);
-        dup2(pipefd1[WEND], STDOUT_FD);
-
-        // Get the present substring.
-        char buf[BUFSIZE];
-        ssize_t strlen = read(stdin, buf, BUFSIZE);
-
-        fprintf(stderr, "Left child read string. String is \"%s\".\n", buf);
-
-        // Are we done? (Don't forget one of the characters is the null terminator!)
-        if (strlen <= 2) {
-            // add a null character to make it a string.
-            buf[1] = '\0';
-
-            // Return the value to the parent.
-            printf("%s", buf);
-        }
-        else {
-            // We're not done, continue
-            mergeSort(buf, strlen);
-        }
+        // Pipes used are 0 -> stdin, 1 -> stdout
+        readChild(int * pipefd0, int * pipefd1, "Left");
 
         // All done for this thread!
-        _exit(EXIT_SUCCESS);
+        return;
     }
 
-    fprintf(stderr, "Process created left child. String is \"%s\".\n", str);
+    fprintf(stderr, "Process created left child.");
 
     /// RIGHT SUBSTRING
 
@@ -102,41 +77,20 @@ void mergeSort(char *str, int len) {
         _exit(EXIT_FAILURE);
     }
     else if (l_pid == 0) {
-        // Right child process. Change pipe information, then repeat function.
-        fprintf(stderr, "Process entered right child. Waiting for string.\n");
-
         // Close pipes R013, W012
         close(pipefd0[REND]); close(pipefd1[REND]); close(pipefd3[REND]);
         close(pipefd0[WEND]); close(pipefd1[WEND]); close(pipefd2[WEND]);
 
-        // Pipes used are 2 -> stdin, 3 -> sdtout
-        close(STDIN_FD);
-        dup2(pipefd2[REND], STDIN_FD);
+        // Pipes used are 2 -> stdin, 3 -> stdout
+        readChild(int * pipefd2, int * pipefd3, "Right");
 
-        close(STDOUT_FD);
-        dup2(pipefd3[WEND], STDOUT_FD);
-
-        // Get the present substring.
-        char buf[BUFSIZE];
-        ssize_t strlen = read(stdin, buf, BUFSIZE);
-
-        fprintf(stderr, "Right child read string. String is \"%s\".\n", buf);
-
-        // Are we done? (Don't forget one of the characters is the null terminator!)
-        if (strlen <= 2) {
-            // Return the value to the parent.
-            printf("%s", buf);
-        }
-        else {
-            // We're not done, continue
-            mergeSort(buf, strlen);
-        }
-        
         // All done for this thread!
-        _exit(EXIT_SUCCESS);
+        return;
     }
 
-    fprintf(stderr, "Process created right child. String is \"%s\".\n", str);
+    fprintf(stderr, "Process created right child.");
+
+    /// PARENT STRING
 
     // Close pipes R13, W24
     close(pipefd0[REND]); close(pipefd2[REND]);
@@ -148,9 +102,9 @@ void mergeSort(char *str, int len) {
     char * strleft = malloc((len / 2) + 1); // Add one for the new null character.
     char * strright = malloc(len - (len / 2)); // Round up for the rest of the string.
     strncpy(strleft, str, len / 2); strleft[len / 2] = '\0'; // Copy the first half, and add ther null terminator.
-    strncpy(strright, str + (len / 2) + 1, len - (len / 2)); // Copy the second half.
+    strncpy(strright, str + (len / 2), len - (len / 2)); // Copy the second half.
 
-    fprintf(stderr, "Process splitting string. Left is \"%s\", right is \"%s\".\n", strleft, strright);
+    fprintf(stderr, "Process splitting string.\n\tLeft is \"%s\", right is \"%s\".\n", strleft, strright);
 
     // Write out the left string.
     write(pipefd0[WEND], strleft, (len / 2) + 1);
@@ -194,7 +148,38 @@ void mergeSort(char *str, int len) {
     _exit(EXIT_SUCCESS);
 }
 
-// Remember to free the result when done!
+void readChild(int * pipefdin, int * pipefdout, char * name) {
+    // Print out that we entered.
+    fprintf(stderr, "Process entered %s child. Waiting for string.\n", name);
+
+    // Change pipes to stedin and stdout.
+    close(STDIN_FD);
+    dup2(pipefdsin[REND], STDIN_FD);
+
+    close(STDOUT_FD);
+    dup2(pipefdout[WEND], STDOUT_FD);
+
+    // Get the present substring.
+    char buf[BUFSIZ];
+    ssize_t strlen = read(stdin, buf, BUFSIZ);
+
+    fprintf(stderr, "%s child read string. String is \"%s\", length is %d.\n", name, buf, strlen);
+
+    // Are we done? (Don't forget one of the characters is the null terminator!)
+    if (strlen <= 2) {
+        // add a null character to make it a string.
+        buf[1] = '\0';
+
+        // Return the value to the parent.
+        printf("%s", buf);
+    }
+    else {
+        // We're not done, continue
+        mergeSort(buf, strlen);
+    }
+}
+
+// TODO: Remember to free the result when done!
 char * sort(char * left, char * right, int llen, int rlen) {
     // We need one less than the sum of the sizes (only need one null terminator).
     char * merge = malloc(llen + rlen - 1);
