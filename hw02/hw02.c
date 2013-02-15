@@ -104,10 +104,12 @@ void mergeSort(char *str, int len) {
     // Pipes used for left are 1 -> in, 0 -> out. Pipes used for right are 3 -> in, 2 -> out.
 
     // Divide the string into half, one for each side.
-    char * strleft = malloc((len / 2) + 1); // Add one for the new null character.
-    char * strright = malloc(len - (len / 2)); // Round up for the rest of the string.
-    strncpy(strleft, str, len / 2); strleft[len / 2] = '\0'; // Copy the first half, and add ther null terminator.
-    strncpy(strright, str + (len / 2), len - (len / 2)); // Copy the second half.
+    int splitllen = (len - 1) / 2; // One less because of the null character.
+    int splitrlen = len - (splitllen + 1); // The rest of the string, less the null character.
+    char * strleft = malloc(splitllen + 1); strleft[splitllen] = '\0';
+    char * strright = malloc(splitrlen + 1); strright[splitrlen] = '\0';
+    strncpy(strleft, str, splitllen);
+    strncpy(strright, str + splitllen, splitrlen);
 
     fprintf(stderr, "Process splitting string.\n\tLeft is \"%s\", right is \"%s\".\n", strleft, strright);
 
@@ -141,12 +143,13 @@ void mergeSort(char *str, int len) {
     fprintf(stderr, "Process read results. Left result is \"%s\", right result is \"%s\".\n", lres, rres);
 
     // Merge the strings back together.
-    char * mergedstring = sort(lres, rres, (len / 2) + 1, len - (len / 2));
+    char * mergedstring;
+    int mergedlen = sort(mergedstring, lres, rres, (len / 2) + 1, len - (len / 2));
     free(lres); free(rres); // Free unneeded substrings.
 
     // Return the result to the parent.
     fprintf(stderr, "Process merged string. String is \"%s\".\n", mergedstring);
-    printf(mergedstring);
+    write(STDOUT_FD, mergedstring, mergedlen);
     free(mergedstring);
 
     // All done for this thread!
@@ -166,7 +169,7 @@ void readChild(int * pipefdin, int * pipefdout, char * name) {
 
     // Get the present substring.
     char buf[BUFSIZ];
-    ssize_t strlen = read(STDIN,_FD buf, BUFSIZ);
+    ssize_t strlen = read(STDIN_FD, buf, BUFSIZ);
 
     fprintf(stderr, "%s child read string. String is \"%s\", length is %d.\n", name, buf, strlen);
 
@@ -176,7 +179,7 @@ void readChild(int * pipefdin, int * pipefdout, char * name) {
         buf[1] = '\0';
 
         // Return the value to the parent.
-        printf("%s", buf);
+        write(STDOUT_FD, buf, BUFSIZ);
     }
     else {
         // We're not done, continue
@@ -185,10 +188,11 @@ void readChild(int * pipefdin, int * pipefdout, char * name) {
 }
 
 // TODO: Remember to free the result when done!
-char * sort(char * left, char * right, int llen, int rlen) {
+int sort(char * mergedstring, char * left, char * right, int llen, int rlen) {
     // We need one less than the sum of the sizes (only need one null terminator).
-    char * merge = malloc(llen + rlen - 1);
-    merge[llen + rlen - 2] = '\0';
+    free(mergedstring);
+    mergedstring = malloc(llen + rlen - 1);
+    mergedstring[llen + rlen - 2] = '\0';
 
     int i = 0;
     int l = 0; int lmax = llen - 1;
@@ -196,19 +200,19 @@ char * sort(char * left, char * right, int llen, int rlen) {
     while (l < lmax || r < rmax) {
         if (l < lmax && r < rmax) {
             if (left[l] <= right[r]) {
-                merge[i++] = left[l++];
+                mergedstring[i++] = left[l++];
             }
             else {
-                merge[i++] = right[r++];
+                mergedstring[i++] = right[r++];
             }
         }
         else if (l < lmax) {
-            merge[i++] = left[l++];
+            mergedstring[i++] = left[l++];
         }
         else if (r < rmax) {
-            merge[i++] = right[r++];
+            mergedstring[i++] = right[r++];
         }
     }
 
-    return merge;
+    return llen + rlen - 1;
 }

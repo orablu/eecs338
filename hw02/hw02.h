@@ -3,7 +3,7 @@
 
 int main();
 void mergeSort(char *str, int len);
-char * sort(char * left, char * right, int llen, int rlen);
+int sort(char * mergedstring, char * left, char * right, int llen, int rlen);
 void readChild(int * pipefdin, int * pipefdout, char * name);
 
 #endif
