@@ -180,7 +180,7 @@ void readChild(int * pipefdin, int * pipefdout, char * name) {
     }
     else {
         // We're not done, continue
-        mergeSort(buf, strlen);
+        execlp("./main", "./main", NULL);
     }
 }
 
