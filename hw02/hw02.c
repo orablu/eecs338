@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,6 +15,9 @@
 #define WEND 1
 
 #define PIPE_ERROR "Error creating pipe %d"
+
+#define PIPE(pipefd) do { if (pipe(pipefd)) { perror("Error creating pipe."); _exit(errno); } } while (0)
+#define CLOSE(fd) do { int result = close(fd); if (result == -1) { perror("Error closing pipe."); _exit(errno); } } while (0)
 
 // TODO: Close pipes as soon as done writing!
 
@@ -38,57 +42,58 @@ int main() {
 
     // All done!
     printf("\n");
-    return EXIT_SUCCESS;
+    return 0;
 }
 
 void mergeSort(char *str, int len) {
     // Print out the string we have.
-    fprintf(stderr, "Process entered mergeSort. String is \"%s\".", str);
+    fprintf(stderr, "Process entered mergeSort. String is \"%s\".\n", str);
 
     // Create pipes.
-    char pipefd0[2], pipefd1[2], pipefd2[2], pipefd3[2];
+    int pipefd0[2], pipefd1[2], pipefd2[2], pipefd3[2];
+    PIPE(pipefd0); PIPE(pipefd1); PIPE(pipefd2); PIPE(pipefd3);
 
     /// LEFT SUBSTRING
 
     pid_t l_pid = fork();
     if (l_pid < 0) {
-        perror("Error forking left child");
+        perror("Error forking left child.");
         _exit(EXIT_FAILURE);
     }
     else if (l_pid == 0) {
         // Close pipes R123, W023
-        close(pipefd1[REND]); close(pipefd2[REND]); close(pipefd3[REND]);
-        close(pipefd0[WEND]); close(pipefd2[WEND]); close(pipefd3[WEND]);
+        CLOSE(pipefd1[REND]); CLOSE(pipefd2[REND]); CLOSE(pipefd3[REND]);
+        CLOSE(pipefd0[WEND]); CLOSE(pipefd2[WEND]); CLOSE(pipefd3[WEND]);
 
         // Pipes used are 0 -> stdin, 1 -> stdout
-        readChild(int * pipefd0, int * pipefd1, "Left");
+        readChild(pipefd0, pipefd1, "Left");
 
         // All done for this thread!
         return;
     }
 
-    fprintf(stderr, "Process created left child.");
+    fprintf(stderr, "Process created left child.\n");
 
     /// RIGHT SUBSTRING
 
     pid_t r_pid = fork();
     if (r_pid < 0) {
-        perror("Error forking right child");
+        perror("Error forking right child.");
         _exit(EXIT_FAILURE);
     }
     else if (l_pid == 0) {
         // Close pipes R013, W012
-        close(pipefd0[REND]); close(pipefd1[REND]); close(pipefd3[REND]);
-        close(pipefd0[WEND]); close(pipefd1[WEND]); close(pipefd2[WEND]);
+        CLOSE(pipefd0[REND]); CLOSE(pipefd1[REND]); CLOSE(pipefd3[REND]);
+        CLOSE(pipefd0[WEND]); CLOSE(pipefd1[WEND]); CLOSE(pipefd2[WEND]);
 
         // Pipes used are 2 -> stdin, 3 -> stdout
-        readChild(int * pipefd2, int * pipefd3, "Right");
+        readChild(pipefd2, pipefd3, "Right");
 
         // All done for this thread!
         return;
     }
 
-    fprintf(stderr, "Process created right child.");
+    fprintf(stderr, "Process created right child.\n");
 
     /// PARENT STRING
 
@@ -116,14 +121,14 @@ void mergeSort(char *str, int len) {
     close(pipefd2[WEND]);
     free(strright);
 
-    fprintf(stderr, "Process waiting for children. String is \"%s\".", str);
+    fprintf(stderr, "Process waiting for children. String is \"%s\".\n", str);
 
     // Wait for response.
     int statusl, statusr;
     pid_t resultl = wait(&statusl);
     pid_t resultr = wait(&statusr);
     if (resultl < 0 || resultr < 0) {
-        perror("A child terminated unsucessfully");
+        perror("A child terminated unsucessfully.");
         _exit(EXIT_FAILURE);
     }
 
@@ -133,14 +138,14 @@ void mergeSort(char *str, int len) {
     char * rres = malloc(len - (len / 2));
     ssize_t rlen = read(pipefd3[REND], rres, len - (len / 2));
 
-    fprintf(stderr, "Process read results. Left result is \"%s\", right result is \"%s\".", lres, rres);
+    fprintf(stderr, "Process read results. Left result is \"%s\", right result is \"%s\".\n", lres, rres);
 
     // Merge the strings back together.
     char * mergedstring = sort(lres, rres, (len / 2) + 1, len - (len / 2));
     free(lres); free(rres); // Free unneeded substrings.
 
     // Return the result to the parent.
-    fprintf(stderr, "Process merged string. String is \"%s\".", mergedstring);
+    fprintf(stderr, "Process merged string. String is \"%s\".\n", mergedstring);
     printf(mergedstring);
     free(mergedstring);
 
@@ -154,7 +159,7 @@ void readChild(int * pipefdin, int * pipefdout, char * name) {
 
     // Change pipes to stedin and stdout.
     close(STDIN_FD);
-    dup2(pipefdsin[REND], STDIN_FD);
+    dup2(pipefdin[REND], STDIN_FD);
 
     close(STDOUT_FD);
     dup2(pipefdout[WEND], STDOUT_FD);
