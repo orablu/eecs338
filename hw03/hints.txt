@@ -1,0 +1,10 @@
+Oxy process
+- arrives at semaphore
+- wait mutex
+- if two hyd
+    - release two Hyd
+    - signal mutex
+- else
+    - wait oxymutex
+    - signal mutex
+2) only one process survives 
