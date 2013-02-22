@@ -1,38 +1,45 @@
+Wes Rupert - wkr3
+eecs338    - hw03
+
 1)
-1 counting semaphores:
+2 counting semaphores:
     hydrogenStop, initially set to 0.
-1 binary semaphores:
-    mutex, initially set to 1.
-hydrogenCount : integer, initially set to 0
+    oxygenStop, initially set to 0.
+1 binary semaphore: mutex, initially set to 1.
+2 integer variables:
+    hydrogenCount, initially set to 0.
+    oxygenCount, initially set to 0.
 
 -- Hydrogen --
 do
     wait mutex;
     hydrogenCount++;
+    if (hydrogenCount >= 2 && oxygenCount >= 1) do
+        oxygenCount--;
+        hydrogenCount--;
+        hydrogenCount--;
+        signal oxygenStop;
+        signal hydrogenStop;
+        signal hydrogenStop;
+    end
     signal mutex;
     wait hydrogenStop;
-    wait mutex;
     bond;
-    hydrogenCount--;
-    signal mutex;
-    exit;
 end
 
 -- Oxygen --
 do
     wait mutex;
+    oxygenCount++;
     if (hydrogenCount >= 2) do
+        oxygenCount--;
+        hydrogenCount--;
+        hydrogenCount--;
+        signal oxygenStop;
         signal hydrogenStop;
         signal hydrogenStop;
-        bond;
-        signal mutex;
-        exit;
-    else do
-        signal mutex;
-until False;
-
-2)
-
-
-3)
-
+    end
+    signal mutex;
+    wait oxygenStop;
+    bond;
+end
