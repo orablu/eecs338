@@ -1,12 +1,13 @@
 Wes Rupert - wkr3
 eecs338    - hw03
 
-1)
-    2 counting semaphores:
+1) Generate H2O molecules.
+    counting semaphores:
         hydrogenStop, initially set to 0.
         oxygenStop, initially set to 0.
-    1 binary semaphore: mutex, initially set to 1.
-    2 integer variables:
+    binary semaphores:
+        mutex, initially set to 1.
+    integer variables:
         hydrogenCount, initially set to 0.
         oxygenCount, initially set to 0.
 
@@ -44,72 +45,135 @@ eecs338    - hw03
         bond;
     end
 
-2)
-    2 counting semaphores:
+    -- Notes --
+    This algorithm checks if there is known to be enough materials for at least one H2O molecule, and if so creates that molecule, otherwise waits some more. This means that there is no race conditions and molecules do get created.
+
+2) Generates exactly 1 H2O molecule at a time, on only 1 of the threads.
+    counting semaphores:
         hydrogenStop, initially set to 0.
         oxygenStop, initially set to 0.
-    1 binary semaphore: mutex, initially set to 1.
-    3 integer variables:
+    binary semaphores:
+        mutex, initially set to 1.
+    integer variables:
         hydrogenCount, initially set to 0.
         oxygenCount, initially set to 0.
         deadCount, initially set to 0.
 
     -- Hydrogen --
     do
-        wait mutex;
-        hydrogenCount++;
-        if (hydrogenCount >= 2 && oxygenCount >= 1) do
-            oxygenCount--;
-            hydrogenCount--;
-            hydrogenCount--;
-            signal oxygenStop;
-            signal hydrogenStop;
-            signal hydrogenStop;
-            deadCount = 3;
-        end
-        signal mutex;
-        wait hydrogenStop;
-        if (deadCount == 1) do
+        if (deadCount == 0) do
             wait mutex;
-            deadCount--;
+            hydrogenCount++;
+            if (hydrogenCount >= 2 && oxygenCount >= 1) do
+                oxygenCount--;
+                hydrogenCount--;
+                hydrogenCount--;
+                signal oxygenStop;
+                signal hydrogenStop;
+                signal hydrogenStop;
+                deadCount = 3;
+            end
             signal mutex;
-            makeH2O;
-            exit;
-        else do
-            wait mutex;
-            deadCount--;
-            signal mutex;
-            exit;
+            wait hydrogenStop;
+            if (deadCount == 1) do
+                wait mutex;
+                deadCount--;
+                signal mutex;
+                makeH2O;
+                exit;
+            else do
+                wait mutex;
+                deadCount--;
+                signal mutex;
+                exit;
+            end
         end
-    end
+    until False
 
     -- Oxygen --
     do
-        wait mutex;
-        oxygenCount++;
-        if (hydrogenCount >= 2) do
-            oxygenCount--;
-            hydrogenCount--;
-            hydrogenCount--;
-            signal oxygenStop;
-            signal hydrogenStop;
-            signal hydrogenStop;
-            deadCount = 3;
-        end
-        signal mutex;
-        wait oxygenStop;
-        if (deadCount == 1) do
+        if (deadCount == 0) do
             wait mutex;
-            deadCount--;
+            oxygenCount++;
+            if (hydrogenCount >= 2 && deadCount == 0) do
+                oxygenCount--;
+                hydrogenCount--;
+                hydrogenCount--;
+                signal oxygenStop;
+                signal hydrogenStop;
+                signal hydrogenStop;
+                deadCount = 3;
+            end
             signal mutex;
-            makeH2O;
-            exit;
-        else do
-            wait mutex;
-            deadCount--;
-            signal mutex;
-            exit;
+            wait oxygenStop;
+            if (deadCount == 1) do
+                wait mutex;
+                deadCount--;
+                signal mutex;
+                makeH2O;
+                exit;
+            else do
+                wait mutex;
+                deadCount--;
+                signal mutex;
+                exit;
+            end
         end
     end
 
-3)
+    -- Notes --
+    This algorithm performs the same action as the solution to problem 1, except now only one molecule can be in the process of bonding at a time, and only one thread remains after the bond has occurred.
+
+3) Silly baboons. Have some semaphores.
+    counting semaphores:
+        canCross, initially set to 5.
+    binary semaphores:
+        start, initially set to 1.
+        canLeft, initially set to 1.
+        canRight, initially set to 0.
+    integer variables:
+        crossingLeft, initially set to 0.
+        crossingRight, initially set to 0.
+    boolean variables:
+        
+
+    -- Left baboon --
+    do
+        wait start;
+        wait mutex;
+        wait canLeft;
+        crossingLeft++;
+        signal canLeft;
+        signal mutex;
+        signal start;
+        wait canCross;
+        wait mutex;
+        crossingLeft--;
+        signal canCross;
+        if (crossingLeft == 0) do
+            signal canRight;
+        end
+        signal mutex;
+    until False
+
+    -- Right baboon --
+    do
+        wait start;
+        wait mutex;
+        wait canRight;
+        crossingRight++;
+        signal canRight;
+        signal mutex;
+        signal start;
+        wait canCross;
+        wait mutex;
+        crossingRight--;
+        signal canCross;
+        if (crossingRight == 0) do
+            signal canLeft;
+        end
+        signal mutex;
+    until False
+
+    -- Notes --
+    This algorithm gives one baboon priority at a time. If this baboon is going the same direction as the others, he can go ahead, otherwise no other baboon can start crossing until the priority baboon has crossed. Others can still finish crossing, however, so there is no deadlock.
