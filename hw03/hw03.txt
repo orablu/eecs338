@@ -1,0 +1,38 @@
+1)
+1 counting semaphores:
+    hydrogenStop, initially set to 0.
+1 binary semaphores:
+    mutex, initially set to 1.
+hydrogenCount : integer, initially set to 0
+
+-- Hydrogen --
+do
+    wait mutex;
+    hydrogenCount++;
+    signal mutex;
+    wait hydrogenStop;
+    wait mutex;
+    bond;
+    hydrogenCount--;
+    signal mutex;
+    exit;
+end
+
+-- Oxygen --
+do
+    wait mutex;
+    if (hydrogenCount >= 2) do
+        signal hydrogenStop;
+        signal hydrogenStop;
+        bond;
+        signal mutex;
+        exit;
+    else do
+        signal mutex;
+until False;
+
+2)
+
+
+3)
+
