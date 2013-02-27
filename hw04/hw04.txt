@@ -43,4 +43,44 @@ eecs338    - hw03
 
 
 2) Silly baboons. Have some CCRs.
-    
+    var rope : shared record
+    begin
+        boolean left := true, right := false;
+        int crossing := 0, crossed := 0;
+    end
+
+    procedure left-baboon()
+    begin
+        region rope when ((!right or (left and crossed > 10) or (right and crossing < 1)) and crossing < 5) do {
+            if (crossed > 10 or crossing < 1) then {
+                crossed = 0;
+                crossing = 0;
+                right = false;
+                left = true;
+            }
+            crossing++;
+        }
+        CROSS();
+        region rope do {
+            crossing--;
+            crossed++;
+        }
+    end
+
+    procedure right-baboon()
+    begin
+        region rope when ((!left or (right and crossed > 10) or (left and crossing < 1)) and crossing < 5) do {
+            if (crossed > 10 or crossing < 1) then {
+                crossed = 0;
+                crossing = 0;
+                left = false;
+                right = true;
+            }
+            crossing++;
+        }
+        CROSS();
+        region rope do {
+            crossing--;
+            crossed++;
+        }
+    end
