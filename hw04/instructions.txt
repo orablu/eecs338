@@ -13,7 +13,7 @@ We don’t have to worry about matching the processes up explicitly; that is, the 
 Write a monitor-based solution (i.e., an algorithm) to the H2O production problem. Explain your algorithm, and explicitly specify any assumptions you make about the model.
 
 
-(50 pts) 3) Baboon Crossing Problem (semaphore-based process synchronization). There is a deep canyon somewhere in the Katavi National Park, Tanzania, and a single rope that spans the canyon. Baboons can cross the canyon by swinging hand-over-hand on the rope, but if two baboons going in opposite directions meet in the middle, they fight until one or both drop to their deaths. Furthermore, the rope is only strong enough to hold 5 baboons. If there are more baboons on the rope at the same time, it breaks.
+(50 pts) 2) Baboon Crossing Problem (semaphore-based process synchronization). There is a deep canyon somewhere in the Katavi National Park, Tanzania, and a single rope that spans the canyon. Baboons can cross the canyon by swinging hand-over-hand on the rope, but if two baboons going in opposite directions meet in the middle, they fight until one or both drop to their deaths. Furthermore, the rope is only strong enough to hold 5 baboons. If there are more baboons on the rope at the same time, it breaks.
 
 Assuming that we can teach the baboons to use semaphores, we would like to design a synchronization scheme with the following properties:
 

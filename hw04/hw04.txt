@@ -1,0 +1,46 @@
+Wes Rupert - wkr3
+eecs338    - hw03
+
+1) Generate H2O molecules.
+    monitor bond-queue
+    begin
+        procedure oxygen-enter()
+        begin
+            oxyCount++;
+            if (hydroCount < 2) then
+                oxygen.wait;
+            hydrogen.signal;
+            hydrogen.signal;
+            oxyCount--;
+        end
+
+        procedure hydrogen-enter()
+        begin
+            hydroCount++;
+            if (oxyCount < 1 || hydroCount < 2) then
+                hydrogen.wait;
+            hydrogen.signal;
+            oxygen.signal;
+            hydroCount--;
+        end
+
+        // Shared and condition variable initialization.
+        begin
+            int oxyCount := 0, hydroCount := 0;
+            condition oxygen, hydrogen;
+        end
+    end
+
+    Oxygen:
+    bonds of-type bond-queue
+        oxygen-enter();
+        BOND();
+
+    Hydrogen:
+    bonds of-type bond-queue
+        hydrogen-enter();
+        BOND();
+
+
+2) Silly baboons. Have some CCRs.
+    
