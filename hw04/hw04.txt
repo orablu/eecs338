@@ -1,5 +1,5 @@
 Wes Rupert - wkr3
-eecs338    - hw03
+eecs338    - hw04
 
 1) Generate H2O molecules.
     monitor bond-queue
@@ -51,8 +51,8 @@ eecs338    - hw03
 
     procedure left-baboon()
     begin
-        region rope when ((!right or (left and crossed > 10) or (right and crossing < 1)) and crossing < 5) do {
-            if (crossed > 10 or crossing < 1) then {
+        region rope when ((!right or (left and crossed < 10) or (right and crossing < 1)) and crossing < 5) do {
+            if (crossed > 10 or (!left and crossing < 1)) then {
                 crossed = 0;
                 crossing = 0;
                 right = false;
@@ -69,8 +69,8 @@ eecs338    - hw03
 
     procedure right-baboon()
     begin
-        region rope when ((!left or (right and crossed > 10) or (left and crossing < 1)) and crossing < 5) do {
-            if (crossed > 10 or crossing < 1) then {
+        region rope when ((!left or (right and crossed < 10) or (left and crossing < 1)) and crossing < 5) do {
+            if (crossed > 10 or (!right and crossing < 1)) then {
                 crossed = 0;
                 crossing = 0;
                 left = false;
