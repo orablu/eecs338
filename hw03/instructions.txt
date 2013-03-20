@@ -8,7 +8,7 @@ In other words:
 
 - If a hydrogen process arrives at the barrier when no other processes are present, it has to wait for an oxygen process and another hydrogen process.
 
-We don’t have to worry about matching the processes up explicitly; that is, the processes do not necessarily know which other processes they are paired up with. The key is just that processes pass the barrier in complete sets; thus, if we examine the sequence of processes that invoke bond and divide them into groups of three, each group should contain one oxygen and two hydrogen processes.
+We don't have to worry about matching the processes up explicitly; that is, the processes do not necessarily know which other processes they are paired up with. The key is just that processes pass the barrier in complete sets; thus, if we examine the sequence of processes that invoke bond and divide them into groups of three, each group should contain one oxygen and two hydrogen processes.
 
 Write a semaphore-based solution (i.e., an algorithm) to the H2O production problem. Explain your algorithm, and explicitly specify any assumptions you make about the model.
 
