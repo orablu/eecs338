@@ -32,34 +32,34 @@ void main() {
 
     // Create the semaphores.
     semkey = semget(IPC_PRIVATE, SEMCOUNT, IPC_CREAT | 0666);
-    if (semkay < 0) {
+    if (semkey < 0) {
         perror("Error getting semaphores");
         cleanup(EXIT_FAILURE);
     }
     initialize_semaphores(semkey);
 
     // Setup shared data.
-    SHMINFO shmmem = {
+    SHMDATA shmdata = {
         shmid, semkey,
         MUTEX, O, H, B
-    }
+    };
 
     // Create processes.
-    start_oxygen   (shmmem, 0);
-    start_oxygen   (shmmem, 1);
-    start_hydrogen (shmmem, 2);
-    start_hydrogen (shmmem, 3);
-    start_hydrogen (shmmem, 4);
-    start_hydrogen (shmmem, 5);
-    start_hydrogen (shmmem, 6);
-    start_oxygen   (shmmem, 7);
-    start_hydrogen (shmmem, 8);
-    start_hydrogen (shmmem, 9);
-    start_hydrogen (shmmem, 10);
-    start_oxygen   (shmmem, 11);
-    start_hydrogen (shmmem, 12);
-    start_oxygen   (shmmem, 13);
-    start_hydrogen (shmmem, 14);
+    start_oxygen   (shmdata, 0);
+    start_oxygen   (shmdata, 1);
+    start_hydrogen (shmdata, 2);
+    start_hydrogen (shmdata, 3);
+    start_hydrogen (shmdata, 4);
+    start_hydrogen (shmdata, 5);
+    start_hydrogen (shmdata, 6);
+    start_oxygen   (shmdata, 7);
+    start_hydrogen (shmdata, 8);
+    start_hydrogen (shmdata, 9);
+    start_hydrogen (shmdata, 10);
+    start_oxygen   (shmdata, 11);
+    start_hydrogen (shmdata, 12);
+    start_oxygen   (shmdata, 13);
+    start_hydrogen (shmdata, 14);
 
     // Wait for children to complete.
     int i;
@@ -82,7 +82,7 @@ void main() {
     return status;
 }
 
-void start_oxygen(SHMINFO shmmem, int ipid) {
+void start_oxygen(SHMDATA shmdata, int ipid) {
     // Fork process.
     pid_t pid = tryfork();
     if (!pid) {
@@ -90,10 +90,10 @@ void start_oxygen(SHMINFO shmmem, int ipid) {
     }
     pids[ipid] = pid;
 
-    oxygen(shmmem);
+    oxygen(shmdata);
 }
 
-void start_hydrogen(SHMINFO shmmem, int ipid) {
+void start_hydrogen(SHMDATA shmdata, int ipid) {
     // Fork process.
     pid_t pid = tryfork();
     if (!pid) {
@@ -101,7 +101,7 @@ void start_hydrogen(SHMINFO shmmem, int ipid) {
     }
     pids[ipid] = pid;
 
-    hydrogen(shmmem);
+    hydrogen(shmdata);
 }
 
 pid_t tryfork() {

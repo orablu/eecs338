@@ -6,15 +6,15 @@
 #define SIGNAL 1
 
 // The shared memory information.
-#define SHMINFO struct shminfo
-SHMINFO {
+#define SHMDATA struct shmdata
+SHMDATA {
     int shmid;
     int semkey;
     int mutex;
     int o;
     int h;
     int b;
-}
+};
 
 // The shared memory buffer type.
 #define SHMMEM struct shmmem
@@ -37,6 +37,6 @@ SEMUN {
 };
 
 void try_semop(int semkey, SEMBUF * action);
-void log(char * message);
+void logmolecule(char * message);
 
 #endif

@@ -16,8 +16,8 @@ void try_semop(int semkey, SEMBUF * action) {
     }
 }
 
-void log(char * message) {
+void logmolecule(char * message) {
     printf("PROCESS %d: %s\n",
-           0/* TODO: pid */,
+           getpid(),
            message);
 }

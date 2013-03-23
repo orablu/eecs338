@@ -9,7 +9,7 @@
 
 #define SEMOP(x) try_semop(shared.semkey, &x)
 
-void oxygen(SHMINFO shared) {
+void oxygen(SHMDATA shared) {
     // Define useful semaphore variables.
     SEMBUF   wait_mutex = {shared.mutex, WAIT,   0};
     SEMBUF signal_mutex = {shared.mutex, SIGNAL, 0};
@@ -23,35 +23,35 @@ void oxygen(SHMINFO shared) {
     // Attach to shared memory.
     SHMMEM * shmmem = shmat(shared.shmid, (void *)0, 0);
 
-    log("BEGINNING OXYGEN PROCESS");
+    logmolecule("BEGINNING OXYGEN PROCESS");
 
     SEMOP(wait_mutex);
     if (shmmem->HCount >= 2) {
         shmmem->BCount = 2;
-        log("ENOUGH MOLECULES - SIGNALING AND EXITING");
+        logmolecule("ENOUGH MOLECULES - SIGNALING AND EXITING");
         SEMOP(signal_h);
         SEMOP(signal_h);
         _exit(EXIT_SUCCESS);
     }
     else {
         shmmem->OCount++;
-        log("LACKING MOLECULES - WAITING");
+        logmolecule("LACKING MOLECULES - WAITING");
         SEMOP(signal_mutex);
         SEMOP(wait_o);
         SEMOP(wait_b);
         shmmem->OCount--;
         shmmem->BCount--;
         if (shmmem->BCount > 0) {
-            log("AWAKENED - ENOUGH MOLECULES - SIGNALING AND EXITING");
+            logmolecule("AWAKENED - ENOUGH MOLECULES - SIGNALING AND EXITING");
             SEMOP(signal_b);
             _exit(EXIT_SUCCESS);
         }
         else {
-            log("AWAKENED - ENOUGH MOLECULES - SIGNALING AND BONDING");
+            logmolecule("AWAKENED - ENOUGH MOLECULES - SIGNALING AND BONDING");
             SEMOP(signal_b);
             SEMOP(signal_mutex);
         }
 
-        log("MADE IT ACROSS THE BARRIER AS H2O");
+        logmolecule("MADE IT ACROSS THE BARRIER AS H2O");
     }
 }
