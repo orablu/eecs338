@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
 # Imports for the module.
-from struct import pack, unpack
-from sysv_ipc import Semaphore, SharedMemory
+from struct import calcsize, pack, unpack
+from sysv_ipc import Semaphore, SharedMemory, IPC_CREAT
 from threading import Thread
 
 # Constants for the module.
@@ -14,38 +14,38 @@ KEYS = {"M" : 42,
         "B" : 45,
         "S" : 46
         }
-THREADS = [
-        Thread(target=Oxygen),
-        Thread(target=Oxygen),
-        Thread(target=Hydrogen),
-        Thread(target=Hydrogen),
-        Thread(target=Hydrogen),
-        Thread(target=Hydrogen),
-        Thread(target=Oxygen),
-        Thread(target=Hydrogen),
-        Thread(target=Hydrogen),
-        Thread(target=Hydrogen),
-        Thread(target=Oxygen),
-        Thread(target=Oxygen),
-        Thread(target=Hydrogen),
-        Thread(target=Hydrogen),
-        Thread(target=Hydrogen)
-        ]
 
 # All non-binary; B is for barrier synchronzation.
-M = Semaphore(KEYS["M"], IPC_CREX, 0600, 1)
-O = Semaphore(KEYS["O"], IPC_CREX, 0600, 0)
-H = Semaphore(KEYS["H"], IPC_CREX, 0600, 0)
-B = Semaphore(KEYS["B"], IPC_CREX, 0600, 0)
+M = Semaphore(KEYS["M"], IPC_CREAT, 0600, 1)
+O = Semaphore(KEYS["O"], IPC_CREAT, 0600, 0)
+H = Semaphore(KEYS["H"], IPC_CREAT, 0600, 0)
+B = Semaphore(KEYS["B"], IPC_CREAT, 0600, 0)
 
 # Shread memory for the threads. Saved in ints as hcount, ocount, bcount
-shm = SharedMemory(KEYS["S"], IPC_CREX, 0600, MEMSIZE)
+shm = SharedMemory(KEYS["S"], IPC_CREAT, 0600, MEMSIZE)
 shm.update_write(pack(MEMFRMT, 0, 0, 0))
 
 def main():
-    for thread in THREADS:
+    threads = [
+            Thread(target=Oxygen),
+            Thread(target=Oxygen),
+            Thread(target=Hydrogen),
+            Thread(target=Hydrogen),
+            Thread(target=Hydrogen),
+            Thread(target=Hydrogen),
+            Thread(target=Oxygen),
+            Thread(target=Hydrogen),
+            Thread(target=Hydrogen),
+            Thread(target=Hydrogen),
+            Thread(target=Oxygen),
+            Thread(target=Oxygen),
+            Thread(target=Hydrogen),
+            Thread(target=Hydrogen),
+            Thread(target=Hydrogen)
+            ]
+    for thread in threads:
         thread.start()
-    for thread in THREADS:
+    for thread in threads:
         thread.join()
 
 def Hydrogen():
