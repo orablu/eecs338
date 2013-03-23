@@ -133,5 +133,37 @@ void initialize_semaphores(int semkey) {
 }
 
 void cleanup(int status) {
-    // TODO: Implement.
+    // Kill children if they're running
+    int i;
+    for (i = 0; i < PCOUNT; i++) {
+        if (pids[i] > 0) {
+            if (kill(pids[i], SIGKILL)) {
+                perror("Error killing child process");
+                status = EXIT_FAILURE;
+            }
+            wait(NULL);
+        }
+    }
+
+    // For semaphore group with semkey
+    // (Second argument ignored)
+    // remove it (IPC_RMID)
+    if (semkey >= 0) {
+        if (semctl(semkey, 0, IPC_RMID) < 0) {
+            perror("Error removing semaphores");
+            status = EXIT_FAILURE;
+        }
+    }
+
+    // For shared memory segment with id shmid
+    // remove it (IPC_RMID)
+    // (last argument ignored, use NULL pointer)
+    if (shmid >= 0) {
+        if (shmctl(shmid, IPC_RMID, (struct shmid_ds *) NULL)) {
+            perror("Error removing shared memory");
+            status = EXIT_FAILURE;
+        }
+    }
+
+    exit(status);
 }
