@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/ipc.h>
 #include <sys/sem.h>
 #include <sys/shm.h>
+#include <sys/wait.h>
+#include <signal.h>
 #include <unistd.h>
 
 #include "common.h"
@@ -66,7 +69,7 @@ void main() {
     int status = 0;
     int statusi;
     for (i = 0; i < PCOUNT; i++) {
-        wait(&statusi);
+        waitpid(pids[i], &statusi, 0);
         status = status || statusi;
     }
 
@@ -142,26 +145,6 @@ void cleanup(int status) {
                 status = EXIT_FAILURE;
             }
             wait(NULL);
-        }
-    }
-
-    // For semaphore group with semkey
-    // (Second argument ignored)
-    // remove it (IPC_RMID)
-    if (semkey >= 0) {
-        if (semctl(semkey, 0, IPC_RMID) < 0) {
-            perror("Error removing semaphores");
-            status = EXIT_FAILURE;
-        }
-    }
-
-    // For shared memory segment with id shmid
-    // remove it (IPC_RMID)
-    // (last argument ignored, use NULL pointer)
-    if (shmid >= 0) {
-        if (shmctl(shmid, IPC_RMID, (struct shmid_ds *) NULL)) {
-            perror("Error removing shared memory");
-            status = EXIT_FAILURE;
         }
     }
 

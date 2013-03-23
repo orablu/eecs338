@@ -53,5 +53,6 @@ void hydrogen(SHMDATA shared) {
         }
 
         logmolecule("MADE IT ACROSS THE BARRIER AS H2O");
+        _exit(EXIT_SUCCESS);
     }
 }
