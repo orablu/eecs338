@@ -24,7 +24,8 @@ int XingCount = 0;
 int XedCount = 0;
 int ToBWaitCount = 0;
 int ToAWaitCount = 0;
-enum DIRECTIONS { NONE = 0, ATOB, BTOA } XingDirection = NONE;
+enum { NONE = 0, ATOB, BTOA } XingDirection;
+XingDirection = NONE;
 
 // Thread Ids for the baboons.
 #define THREADINFO struct threadinfo
@@ -41,11 +42,11 @@ int main(void) {
     int i;
 
     // Seed the random number generator.
-    srandom(time(NULL));
+    srand(time(NULL));
 
     // Create a set of attributes for the threads.
     pthread_attr_init(&attr);
-    pthread_attr_settdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
     // Initialize the semaphores.
     sem_init(&mutex, 0, 1);
