@@ -1,8 +1,9 @@
 #include <stdlib.h>
-#include <stio.h>
+#include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <time.h>
 #include <pthread.h>
 #include <semaphore.h>
 
@@ -11,7 +12,7 @@
 #define ATOBCOUNT  25
 #define BTOACOUNT  25
 #define MAXSLEEP   1000
-#define LOG(message) printf("THREAD %d: %s\n", threadId, message)
+#define LOG(message) printf("THREAD %d: %s\n", id, message)
 
 // Semaphores.
 sem_t mutex;
@@ -47,9 +48,9 @@ int main(void) {
     pthread_attr_settdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
     // Initialize the semaphores.
-    sem_init(mutex, 0, 1);
-    sem_init(ToB, 0, 0);
-    sem_init(ToA, 0, 0);
+    sem_init(&mutex, 0, 1);
+    sem_init(&ToB, 0, 0);
+    sem_init(&ToA, 0, 0);
 
     /// Spawn baboons.
 
@@ -110,7 +111,7 @@ void * atobCross(void * threadId) {
     sem_wait(&mutex);
 
     if ((XingDirection == ATOB || XingDirection == NONE) && XingCount < 5 && (XedCount + XingCount) < 10) {
-        LOG("Can cross")
+        LOG("Can cross");
         XingDirection = ATOB;
         XingCount++;
         sem_post(&mutex);
@@ -149,6 +150,8 @@ void * atobCross(void * threadId) {
     else {
         sem_post(&mutex);
     }
+
+    return 0;
 }
 
 void * btoaCross(void * threadId) {
@@ -164,7 +167,7 @@ void * btoaCross(void * threadId) {
     sem_wait(&mutex);
 
     if ((XingDirection == BTOA || XingDirection == NONE) && XingCount < 5 && (XedCount + XingCount) < 10) {
-        LOG("Can cross")
+        LOG("Can cross");
         XingDirection = BTOA;
         XingCount++;
         sem_post(&mutex);
@@ -203,6 +206,8 @@ void * btoaCross(void * threadId) {
     else {
         sem_post(&mutex);
     }
+
+    return 0;
 }
 
 void randSleep(int limit) {

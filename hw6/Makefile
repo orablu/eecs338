@@ -10,7 +10,7 @@
 # -Wall : show all warnings
 FLAGS = -g -Wall
 LIBS = # None yet...
-SOURCE = hw6.c
+SOURCE = main.c
 OUTPUT = main
 
 all: $(SOURCE)
