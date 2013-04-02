@@ -12,10 +12,11 @@ FLAGS = -g -Wall
 LIBS = # None yet...
 SOURCE = main.c
 OUTPUT = main
+ETC = -lpthread
 
 all: $(SOURCE)
 	@# Call the compiler with source & output arguments
-	$(CC) $(LIBS) $(FLAGS) -o $(OUTPUT) $(SOURCE)
+	$(CC) $(LIBS) $(FLAGS) -o $(OUTPUT) $(SOURCE) $(ETC)
 	@# Make the output file executable
 	chmod 755 $(OUTPUT)
 

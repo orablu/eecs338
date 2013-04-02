@@ -12,7 +12,7 @@
 #define ATOBCOUNT  25
 #define BTOACOUNT  25
 #define MAXSLEEP   1000
-#define LOG(message) printf("THREAD %d: %s\n", id, message)
+#define LOG(message) printf("THREAD %d:\t%s\n", id, message)
 
 // Semaphores.
 sem_t mutex;
@@ -24,8 +24,7 @@ int XingCount = 0;
 int XedCount = 0;
 int ToBWaitCount = 0;
 int ToAWaitCount = 0;
-enum { NONE = 0, ATOB, BTOA } XingDirection;
-XingDirection = NONE;
+enum { NONE = 0, ATOB, BTOA } XingDirection = NONE;
 
 // Thread Ids for the baboons.
 #define THREADINFO struct threadinfo
