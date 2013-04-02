@@ -149,7 +149,7 @@ void * atobCross(void * threadId) {
     XedCount++;
     XingCount--;
 
-    if (ToBWaitCount != 0 && (((XedCount + XingCount) < 10) || ((XedCount + XingCount) >= 10 && ToAWaitCount == 0)) {
+    if (ToBWaitCount != 0 && (((XedCount + XingCount) < 10) || ((XedCount + XingCount) >= 10 && ToAWaitCount == 0))) {
         LOG("Signalling more A to B");
         sem_post(&ToB);
     }
@@ -173,7 +173,7 @@ void * atobCross(void * threadId) {
 
     LOG("CROSSING COMPLETE - EXITING");
 
-    _exit(EXIT_SUCCESS);
+    return EXIT_SUCCESS ;
 }
 
 void * btoaCross(void * threadId) {
@@ -227,7 +227,7 @@ void * btoaCross(void * threadId) {
     XedCount++;
     XingCount--;
 
-    if (ToAWaitCount != 0 && (((XedCount + XingCount) < 10) || ((XedCount + XingCount) >= 10 && ToBWaitCount == 0)) {
+    if (ToAWaitCount != 0 && (((XedCount + XingCount) < 10) || ((XedCount + XingCount) >= 10 && ToBWaitCount == 0))) {
         LOG("Signalling more A to B");
         sem_post(&ToA);
     }
@@ -251,7 +251,7 @@ void * btoaCross(void * threadId) {
 
     LOG("CROSSING COMPLETE - EXITING");
 
-    _exit(EXIT_SUCCESS);
+    return EXIT_SUCCESS;
 }
 
 void randSleep(int limit) {
