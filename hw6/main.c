@@ -1,3 +1,6 @@
+/* Wes Rupert - wkr3 *
+ * EECS 338   - hw6  */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -173,7 +176,7 @@ void * atobCross(void * threadId) {
 
     LOG("CROSSING COMPLETE - EXITING");
 
-    return EXIT_SUCCESS ;
+    return EXIT_SUCCESS;
 }
 
 void * btoaCross(void * threadId) {
@@ -267,3 +270,4 @@ void randSleep(int limit) {
         _exit(EXIT_FAILURE);
     }
 }
+
