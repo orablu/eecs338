@@ -12,7 +12,7 @@
 #define ATOBCOUNT  25
 #define BTOACOUNT  25
 #define MAXSLEEP   1000
-#define LOG(message) printf("THREAD %d:\t%s\n", id, message)
+#define LOG(message) printf("THREAD %d:\t Xing=%d, Xed=%d, ToBW=%d, ToAW=%d, Dir=%d,\t%s\n", id, XingCount, XedCount, ToBWaitCount, ToAWaitCount, (int)XingDirection, message)
 
 // Semaphores.
 sem_t mutex;
@@ -114,44 +114,66 @@ void * atobCross(void * threadId) {
         LOG("Can cross");
         XingDirection = ATOB;
         XingCount++;
+        LOG("LEAVING CS");
         sem_post(&mutex);
     }
     else {
-        LOG("Unable to cross - waiting");
+        LOG("Unable to cross");
         ToBWaitCount++;
+
+        LOG("LEAVING CS");
         sem_post(&mutex);
+
+        LOG("Waiting for ToB");
         sem_wait(&ToB);
+        LOG("Got ToB");
+
+        ToBWaitCount--;
+        XingCount++;
+        XingDirection = ATOB;
+
+        LOG("LEAVING CS");
+        sem_post(&mutex);
     }
 
     // Simulate crossing.
     LOG("Crossing");
     randSleep(MAXSLEEP);
 
-    sem_wait(&mutex);
-
     // Done crossing.
+    LOG("Waiting for CS");
+    sem_wait(&mutex);
+    LOG("ENTERED CS");
+
     LOG("Finished crossing");
     XedCount++;
     XingCount--;
 
-    if (ToBWaitCount != 0 && (((XedCount + XingCount) < 10) || ToAWaitCount == 0)) {
+    if (ToBWaitCount != 0 && (((XedCount + XingCount) < 10) || ((XedCount + XingCount) >= 10 && ToAWaitCount == 0)) {
+        LOG("Signalling more A to B");
         sem_post(&ToB);
     }
     else if (XingCount == 0 && ToAWaitCount != 0 && (ToBWaitCount == 0 || (XedCount + XingCount) >= 10)) {
+        LOG("Switching crossing control to B to A");
         XingDirection = BTOA;
         XedCount = 0;
         sem_post(&ToA);
     }
     else if (XingCount == 0 && ToBWaitCount == 0 && ToAWaitCount == 0) {
+        LOG("Switching control to NONE");
         XingDirection = NONE;
         XedCount = 0;
+        LOG("LEAVING CS");
         sem_post(&mutex);
     }
     else {
+        LOG("LEAVING CS");
         sem_post(&mutex);
     }
 
-    return 0;
+    LOG("CROSSING COMPLETE - EXITING");
+
+    _exit(EXIT_SUCCESS);
 }
 
 void * btoaCross(void * threadId) {
@@ -170,44 +192,66 @@ void * btoaCross(void * threadId) {
         LOG("Can cross");
         XingDirection = BTOA;
         XingCount++;
+        LOG("LEAVING CS");
         sem_post(&mutex);
     }
     else {
-        LOG("Unable to cross - waiting");
+        LOG("Unable to cross");
         ToAWaitCount++;
+
+        LOG("LEAVING CS");
         sem_post(&mutex);
-        sem_wait(&ToB);
+
+        LOG("Waiting for ToA");
+        sem_wait(&ToA);
+        LOG("Got ToA");
+
+        ToAWaitCount--;
+        XingCount++;
+        XingDirection = BTOA;
+
+        LOG("LEAVING CS");
+        sem_post(&mutex);
     }
 
     // Simulate crossing.
     LOG("Crossing");
     randSleep(MAXSLEEP);
 
-    sem_wait(&mutex);
-
     // Done crossing.
+    LOG("Waiting for CS");
+    sem_wait(&mutex);
+    LOG("ENTERED CS");
+
     LOG("Finished crossing");
     XedCount++;
     XingCount--;
 
-    if (ToAWaitCount != 0 && (((XedCount + XingCount) < 10) || ToBWaitCount == 0)) {
+    if (ToAWaitCount != 0 && (((XedCount + XingCount) < 10) || ((XedCount + XingCount) >= 10 && ToBWaitCount == 0)) {
+        LOG("Signalling more A to B");
         sem_post(&ToA);
     }
     else if (XingCount == 0 && ToBWaitCount != 0 && (ToAWaitCount == 0 || (XedCount + XingCount) >= 10)) {
+        LOG("Switching crossing control to B to A");
         XingDirection = ATOB;
         XedCount = 0;
         sem_post(&ToB);
     }
     else if (XingCount == 0 && ToAWaitCount == 0 && ToBWaitCount == 0) {
+        LOG("Switching control to NONE");
         XingDirection = NONE;
         XedCount = 0;
+        LOG("LEAVING CS");
         sem_post(&mutex);
     }
     else {
+        LOG("LEAVING CS");
         sem_post(&mutex);
     }
 
-    return 0;
+    LOG("CROSSING COMPLETE - EXITING");
+
+    _exit(EXIT_SUCCESS);
 }
 
 void randSleep(int limit) {
