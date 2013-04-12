@@ -1,32 +1,38 @@
 #include "smoker.h"
 
-int main(int argc, char**argv)
-{
-	CLIENT *cl;
+CLIENT * get_client(char * server_hostname);
+void     destroy(CLIENT * client, int smoker_id);
 
-	if(argc != 3)
-	{
-		printf("Usage: ./client HOSTNAME i\n");
-		return 1;
+int main(int argc, char**argv) {
+	if(argc != 4) {
+		printf("Usage: ./client HOSTNAME SMOKERID INCREMENT\n");
+		return EXIT_FAILURE;
 	}
 
-	char *server_hostname = argv[1];
-	cl = clnt_create(server_hostname, SMOKER_PROG, SMOKER_VERS, "udp");
-	if(cl == NULL) {
+	char *   server_hostname = argv[1];
+    int      smoker_id       = atoi(argv[2]);
+	int      increment       = atoi(argv[3]);
+	CLIENT * client          = get_client(server_hostname);
+
+    struct smoker_info info = { TOBACCO, increment, smoker_id, 0 };
+	printf("Received result %d\n - done is %d\n", *result, info.done);
+
+    destroy(client, smoker_id);
+}
+
+CLIENT * get_client(char * server_hostname) {
+	CLIENT * client;
+    client = clnt_create(server_hostname, SMOKER_PROG, SMOKER_VERS, "udp");
+	if(client == NULL) {
 		clnt_pcreateerror("Error creating client");
 		exit(EXIT_FAILURE);
 	}
 
-	struct smoker_info t = {atoi(argv[2]), 9999};
+    return client;
+}
 
-	if(t.one == -1)
-	{
-		smoker_exit_1(&t, cl);
-		printf("Terminated Server\n");
-		return 0;
-	}
-	int* result = smoker_proc_1(&t, cl);
-	printf("Received result %d\n", *result);
-	clnt_destroy(cl);
-	return 0;
+void destroy(CLIENT * client, int smoker_id) {
+    smoker_exit_1((struct exit_info){ smoker_id }, client);
+	clnt_destroy(client);
+	return EXIT_SUCCESS;
 }
