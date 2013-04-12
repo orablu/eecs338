@@ -5,9 +5,9 @@
 #define MATCHES 2
 
 #define STR_TOBAC "tobacco"
-#define STR_PAPER "paper."
-#define STR_MATCH "matches."
-#define STR_UNKNO "of an unknown substance."
+#define STR_PAPER "paper"
+#define STR_MATCH "matches"
+#define STR_UNKNO "of an unknown substance"
 
 char client_active[3] = { 0, 0, 0 };
 char active = 0;
@@ -49,17 +49,19 @@ void _log(smoker_info * in) {
             in->amount);
     switch (in->material) {
         case TOBACCO :
-            printf(STR_TOBAC);
+            printf("%s.\n", STR_TOBAC);
             break;
         case PAPER :
-            printf(STR_PAPER);
+            printf("%s.\n", STR_PAPER);
             break;
         case MATCHES :
-            printf(STR_MATCH);
+            printf("%s.\n", STR_MATCH);
             break;
         default :
-            printf(STR_UNKNO);
+            printf("%s.\n", STR_UNKNO);
             break;
     }
+
+    fflush(NULL);
 }
 

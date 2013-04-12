@@ -19,6 +19,9 @@ int main(int argc, char**argv) {
 	CLIENT * client          = get_client(server_hostname);
 
     struct smoker_info info = { TOBACCO, increment, smoker_id, 0 };
+    
+    smoker_proc_1(&info, client);
+
 	printf("Received. Done is %d\n", info.done);
 
     destroy(client, smoker_id);
