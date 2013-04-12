@@ -1,3 +1,4 @@
+#include "common.h"
 #include "smoker.h"
 
 char materials[3] = {

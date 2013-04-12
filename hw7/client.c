@@ -1,5 +1,5 @@
 #include <time.h>
-
+#include "common.h"
 #include "smoker.h"
 
 // Method primitives.
