@@ -5,7 +5,7 @@ struct smoker_info {
     int done;
 };
 
-struct exit_info {
+struct smoker_id {
     int id;
 };
 
@@ -13,7 +13,8 @@ program SMOKER_PROG
 {
 	version SMOKER_VERS
 	{
-		void SMOKER_PROC(struct smoker_info) = 1;
-		void SMOKER_EXIT(struct exit_info) = 2;
+        int  SMOKER_START(struct smoker_id)  = 1;
+		int  SMOKER_PROC(struct smoker_info) = 2;
+		void SMOKER_EXIT(struct smoker_id)   = 3;
 	} = 1;
 } = 0x1059860;

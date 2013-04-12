@@ -1,40 +1,52 @@
 #include "smoker.h"
 
-#define TOBACCO 0
-#define PAPER   1
-#define MATCHES 2
+char materials[3] = {
+    25, // TOBACCO
+    21, // PAPER
+    20  // MATCHES
+};
 
-#define STR_TOBAC "tobacco"
-#define STR_PAPER "paper"
-#define STR_MATCH "matches"
-#define STR_UNKNO "of an unknown substance"
-
-char client_active[3] = { 0, 0, 0 };
+// Determines whether there are still active smokers or not.
+char smoker_active[SMOKERCOUNT] = { 0, 0, 0 };
 char active = 0;
 
+// Method primitives.
 void _log(smoker_info * in);
 
-void * smoker_proc_1_svc(struct smoker_info * in, struct svc_req * rqstp)
-{
-    if (!client_active[in->id]) {
-        client_active[in->id] = 1;
+int * smoker_start_1_svc(struct * smoker_id in. struct svc_req * rqstp) {
+    // Add the smoker to the active pool if necessary.
+    if (!smoker_active[in->id]) {
+        smoker_active[in->id] = 1;
+        ++active;
+    }
+
+    return active >= SMOKERCOUNT;
+}
+
+int * smoker_proc_1_svc(struct smoker_info * in, struct svc_req * rqstp) {
+    // Add the smoker to the active pool if necessary.
+    if (!smoker_active[in->id]) {
+        smoker_active[in->id] = 1;
         ++active;
     }
 
     _log(in);
 
-    in->done = 7;
-
-	fflush(NULL);
+    if (materials[in->material] > in->amount) {
+        materials[in->material] -= in->amount;
+        return ENOUGH;
+    }
+    else {
+        return NOTENOUGH;
+    }
 }
 
-void * smoker_exit_1_svc(struct exit_info * in, struct svc_req * rqstp)
-{
+void * smoker_exit_1_svc(struct smoker_id * in, struct svc_req * rqstp) {
 	printf("Request for Termination Received\n");
 	fflush(NULL);
 
-    if (client_active[in->id]) {
-        client_active[in->id] = 0;
+    if (smoker_active[in->id]) {
+        smoker_active[in->id] = 0;
         --active;
     }
 
@@ -61,6 +73,12 @@ void _log(smoker_info * in) {
             printf("%s.\n", STR_UNKNO);
             break;
     }
+
+    printf("%d active smokers: %d %d %d\n",
+            active,
+            smoker_active[0],
+            smoker_active[1],
+            smoker_active[2]);
 
     fflush(NULL);
 }

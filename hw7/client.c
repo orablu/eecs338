@@ -1,11 +1,11 @@
+#include <time.h>
+
 #include "smoker.h"
 
-#define TOBACCO 0
-#define PAPER   1
-#define MATCHES 2
-
+// Method primitives.
 CLIENT * get_client(char * server_hostname);
-void     destroy(CLIENT * client, int smoker_id);
+void     destroy(CLIENT * client, int id);
+void     mssleep(int ms);
 
 int main(int argc, char**argv) {
 	if(argc != 4) {
@@ -14,19 +14,68 @@ int main(int argc, char**argv) {
 	}
 
 	char *   server_hostname = argv[1];
-    int      smoker_id       = atoi(argv[2]);
+    int      id              = atoi(argv[2]);
 	int      increment       = atoi(argv[3]);
 	CLIENT * client          = get_client(server_hostname);
 
-    struct smoker_info info = { TOBACCO, increment, smoker_id, 0 };
-    
-    smoker_proc_1(&info, client);
+    // Wait for other smokers to start.
+    while (true) {
+        struct smoker_id info = { id };
+        if (smoker_start_1(&info, client)) {
+            break;
+        }
+        mssleep(100);
+    }
 
-	printf("Received. Done is %d\n", info.done);
+    // Begin smoking.
+    int tobac = 0;
+    int paper = 0;
+    int match = 0;
+    while (true) {
+        // Check that we have enough tobacco.
+        if (tobac <= 0) {
+            struct smoker_info info = { TOBACCO, increment, id, 0 };
+            int result = *smoker_proc_1(&info, client);
+            if (result != ENOUGH) {
+                printf("Not enough tobacco, and I will go kill myself!\n");
+                destroy(client, id);
+            }
 
-    destroy(client, smoker_id);
+            printf("Received %d tobacco!\n", increment);
+        }
 
-    // Unreachable.
+        // Check that we have enough paper.
+        if (paper <= 0) {
+            struct smoker_info info = { PAPER, increment, id, 0 };
+            int result = *smoker_proc_1(&info, client);
+            if (result != ENOUGH) {
+                printf("Not enough paper, and I will go kill myself!\n");
+                destroy(client, id);
+            }
+
+            printf("Received %d paper!\n", increment);
+        }
+
+        // Check that we have enough matches.
+        if (match <= 0) {
+            struct smoker_info info = { MATCHES, increment, id, 0 };
+            int result = *smoker_proc_1(&info, client);
+            if (result != ENOUGH) {
+                printf("Not enough matches, and I will go kill myself!\n");
+                destroy(client, id);
+            }
+
+            printf("Received %d matches!\n", increment);
+        }
+
+        //Smoke!
+        printf("Smoking...\n");
+        fflush(NULL);
+        mssleep(50);
+    }
+
+    // Unreachable. Clean up just in case.
+    destroy(client, id);
     return EXIT_FAILURE;
 }
 
@@ -37,13 +86,23 @@ CLIENT * get_client(char * server_hostname) {
 		clnt_pcreateerror("Error creating client");
 		exit(EXIT_FAILURE);
 	}
-
     return client;
 }
 
-void destroy(CLIENT * client, int smoker_id) {
-    struct exit_info info = { smoker_id };
+void destroy(CLIENT * client, int id) {
+    struct smoker_id info = { id };
     smoker_exit_1(&info, client);
 	clnt_destroy(client);
 	return EXIT_SUCCESS;
+}
+
+void mssleep(int ms) {
+    struct timespec time_ns;
+    time_ns.tv_sec = 0;
+    time_ns.tv_nsec = ms * 1000000;
+    int result = nanosleep(&time_ns, NULL);
+    if (result < 0) {
+        perror("ERROR: Nanosleep");
+        _exit(EXIT_FAILURE);
+    }
 }
