@@ -15,19 +15,25 @@ char active = 0;
 void _log(smoker_info * in);
 
 int * smoker_start_1_svc(struct smoker_id * in, struct svc_req * rqstp) {
+    printf("Queried to start by smoker %d.", in->id);
+
     // Add the smoker to the active pool if necessary.
     if (!smoker_active[in->id]) {
         smoker_active[in->id] = 1;
         ++active;
+        printf(" Activating smoker %d. %d active.", in->id, active);
     }
 
-    printf("Smoker wait query");
+    printf("\n");
     fflush(NULL);
 
     return active >= SMOKERCOUNT;
 }
 
 int * smoker_proc_1_svc(struct smoker_info * in, struct svc_req * rqstp) {
+    printf("Resources requested by smoker %d.\n", in->id);
+    fflush(NULL);
+
     // Add the smoker to the active pool if necessary.
     if (!smoker_active[in->id]) {
         smoker_active[in->id] = 1;
