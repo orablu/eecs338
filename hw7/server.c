@@ -21,6 +21,9 @@ int * smoker_start_1_svc(struct smoker_id * in, struct svc_req * rqstp) {
         ++active;
     }
 
+    printf("Smoker wait query");
+    fflush(NULL);
+
     return active >= SMOKERCOUNT;
 }
 

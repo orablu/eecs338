@@ -19,6 +19,7 @@ int main(int argc, char**argv) {
 	CLIENT * client          = get_client(server_hostname);
 
     // Wait for other smokers to start.
+    printf("Waiting for other smokers...\n");
     while (1) {
         struct smoker_id info = { id };
         if (smoker_start_1(&info, client)) {
@@ -27,6 +28,10 @@ int main(int argc, char**argv) {
         mssleep(100);
     }
 
+    printf("I am smoker %d. I get resources in increments of %d. Smoking.\n",
+            id,
+            increment);
+
     // Begin smoking.
     int tobac = 0;
     int paper = 0;
@@ -34,6 +39,7 @@ int main(int argc, char**argv) {
     while (1) {
         // Check that we have enough tobacco.
         if (tobac <= 0) {
+            printf("Not enough tobacco, asking for more.\n");
             struct smoker_info info = { TOBACCO, increment, id, 0 };
             int result = *smoker_proc_1(&info, client);
             if (result != ENOUGH) {
@@ -46,6 +52,7 @@ int main(int argc, char**argv) {
 
         // Check that we have enough paper.
         if (paper <= 0) {
+            printf("Not enough paper, asking for more.\n");
             struct smoker_info info = { PAPER, increment, id, 0 };
             int result = *smoker_proc_1(&info, client);
             if (result != ENOUGH) {
@@ -58,6 +65,7 @@ int main(int argc, char**argv) {
 
         // Check that we have enough matches.
         if (match <= 0) {
+            printf("Not enough matches, asking for more.\n");
             struct smoker_info info = { MATCHES, increment, id, 0 };
             int result = *smoker_proc_1(&info, client);
             if (result != ENOUGH) {
