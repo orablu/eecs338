@@ -14,7 +14,7 @@ char active = 0;
 // Method primitives.
 void _log(smoker_info * in);
 
-int * smoker_start_1_svc(struct * smoker_id in. struct svc_req * rqstp) {
+int * smoker_start_1_svc(struct smoker_id * in, struct svc_req * rqstp) {
     // Add the smoker to the active pool if necessary.
     if (!smoker_active[in->id]) {
         smoker_active[in->id] = 1;

@@ -19,7 +19,7 @@ int main(int argc, char**argv) {
 	CLIENT * client          = get_client(server_hostname);
 
     // Wait for other smokers to start.
-    while (true) {
+    while (1) {
         struct smoker_id info = { id };
         if (smoker_start_1(&info, client)) {
             break;
@@ -31,7 +31,7 @@ int main(int argc, char**argv) {
     int tobac = 0;
     int paper = 0;
     int match = 0;
-    while (true) {
+    while (1) {
         // Check that we have enough tobacco.
         if (tobac <= 0) {
             struct smoker_info info = { TOBACCO, increment, id, 0 };
