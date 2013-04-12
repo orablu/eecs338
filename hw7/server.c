@@ -1,5 +1,9 @@
 #include "smoker.h"
 
+#define TOBACCO 0
+#define PAPER   1
+#define MATCHES 2
+
 #define STR_TOBAC "tobacco"
 #define STR_PAPER "paper."
 #define STR_MATCH "matches."

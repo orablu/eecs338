@@ -1,5 +1,9 @@
 #include "smoker.h"
 
+#define TOBACCO 0
+#define PAPER   1
+#define MATCHES 2
+
 CLIENT * get_client(char * server_hostname);
 void     destroy(CLIENT * client, int smoker_id);
 
@@ -18,6 +22,9 @@ int main(int argc, char**argv) {
 	printf("Received result %d\n - done is %d\n", *result, info.done);
 
     destroy(client, smoker_id);
+
+    // Unreachable.
+    return EXIT_FAILURE;
 }
 
 CLIENT * get_client(char * server_hostname) {

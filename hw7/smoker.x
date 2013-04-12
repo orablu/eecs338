@@ -1,5 +1,5 @@
 struct smoker_info {
-    enum { TOBACCO = 0, PAPER, MATCHES } material;
+    int material;
 	int amount;
     int id;
     int done;
@@ -7,7 +7,7 @@ struct smoker_info {
 
 struct exit_info {
     int id;
-}
+};
 
 program SMOKER_PROG
 {
