@@ -27,8 +27,14 @@ int * smoker_start_1_svc(struct smoker_id * in, struct svc_req * rqstp) {
     printf("\n");
     fflush(NULL);
 
-    static int canstart = active >= SMOKERCOUNT;
-    return &canstart;
+    if (active <= SMOKERCOUNT) {
+        static int nocanstart = 0;
+        return &nocanstart;
+    }
+    else {
+        static int canstart = 1;
+        return &canstart;
+    }
 }
 
 int * smoker_proc_1_svc(struct smoker_info * in, struct svc_req * rqstp) {
