@@ -19,7 +19,7 @@ int main(int argc, char**argv) {
 	CLIENT * client          = get_client(server_hostname);
 
     struct smoker_info info = { TOBACCO, increment, smoker_id, 0 };
-	printf("Received result %d\n - done is %d\n", *result, info.done);
+	printf("Received. Done is %d\n", info.done);
 
     destroy(client, smoker_id);
 
@@ -39,7 +39,8 @@ CLIENT * get_client(char * server_hostname) {
 }
 
 void destroy(CLIENT * client, int smoker_id) {
-    smoker_exit_1((struct exit_info){ smoker_id }, client);
+    struct exit_info info = { smoker_id };
+    smoker_exit_1(&info, client);
 	clnt_destroy(client);
 	return EXIT_SUCCESS;
 }
