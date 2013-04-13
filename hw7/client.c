@@ -22,10 +22,12 @@ int main(int argc, char**argv) {
     printf("Waiting for other smokers...\n");
     while (1) {
         struct smoker_id info = { id };
-        if (*smoker_start_1(&info, client) == 1) {
+        int * result = smoker_start_1(&info, client);
+        printf("Got response: %d (%d)\n", *result, result);
+        if (*result == 1) {
             break;
         }
-        mssleep(100);
+        mssleep(1000);
     }
 
     printf("I am smoker %d. I get resources in increments of %d. Smoking.\n",
