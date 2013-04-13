@@ -16,6 +16,7 @@ void _log(smoker_info * in);
 
 int * smoker_start_1_svc(struct smoker_id * in, struct svc_req * rqstp) {
     static int result;
+    int newline = 0;
 
     if (in->logging)
         printf("Queried to start by smoker %d.", in->id);
@@ -25,9 +26,10 @@ int * smoker_start_1_svc(struct smoker_id * in, struct svc_req * rqstp) {
         smoker_active[in->id] = 1;
         ++active;
         printf(" Activating smoker %d. %d active.", in->id, active);
+        newline = 1;
     }
 
-    if (in->logging || !smoker_active[in->id]) {
+    if (in->logging || newline) {
         printf("\n");
     }
 
