@@ -7,6 +7,7 @@ struct smoker_info {
 
 struct smoker_id {
     int id;
+    int logging;
 };
 
 program SMOKER_PROG

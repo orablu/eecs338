@@ -16,13 +16,16 @@ void _log(smoker_info * in);
 
 int * smoker_start_1_svc(struct smoker_id * in, struct svc_req * rqstp) {
     static int result;
-    printf("Queried to start by smoker %d.", in->id);
+
+    if (in->logging)
+        printf("Queried to start by smoker %d.", in->id);
 
     // Add the smoker to the active pool if necessary.
     if (!smoker_active[in->id]) {
         smoker_active[in->id] = 1;
         ++active;
-        printf(" Activating smoker %d. %d active.", in->id, active);
+        if (in->logging)
+            printf(" Activating smoker %d. %d active.", in->id, active);
     }
 
     printf("\n");
@@ -58,7 +61,9 @@ int * smoker_proc_1_svc(struct smoker_info * in, struct svc_req * rqstp) {
 }
 
 void * smoker_exit_1_svc(struct smoker_id * in, struct svc_req * rqstp) {
-	printf("Request for Termination Received\n");
+    if (in->logging)
+        printf("Request for Termination Received\n");
+
 	fflush(NULL);
 
     if (smoker_active[in->id]) {
@@ -67,6 +72,7 @@ void * smoker_exit_1_svc(struct smoker_id * in, struct svc_req * rqstp) {
     }
 
     if (!active) {
+        printf("Request for Termination Received. Terminating.\n");
         exit(EXIT_SUCCESS);
     }
 }

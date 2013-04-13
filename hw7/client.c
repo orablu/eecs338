@@ -4,7 +4,7 @@
 
 // Method primitives.
 CLIENT * get_client(char * server_hostname);
-void     destroy(CLIENT * client, int id);
+void     destroy(CLIENT * client, int id, int logging);
 void     mssleep(int ms);
 
 int main(int argc, char**argv) {
@@ -17,13 +17,19 @@ int main(int argc, char**argv) {
     int      id              = atoi(argv[2]);
 	int      increment       = atoi(argv[3]);
 	CLIENT * client          = get_client(server_hostname);
+    int      logging         = 0;
+
+    if (argc >= 5) {
+        logging = atoi(argv[4]);
+    }
 
     // Wait for other smokers to start.
     printf("Waiting for other smokers...\n");
     while (1) {
-        struct smoker_id info = { id };
+        struct smoker_id info = { id, logging };
         int * result = smoker_start_1(&info, client);
-        printf("Got response: %d (%d)\n", *result, result);
+        if (logging)
+            printf("Got response: %d (%d)\n", *result, result);
         if (*result == 1) {
             break;
         }
@@ -53,7 +59,7 @@ int main(int argc, char**argv) {
             int result = *smoker_proc_1(&info, client);
             if (result != ENOUGH) {
                 printf("Not enough tobacco, and I will go kill myself!\n");
-                destroy(client, id);
+                destroy(client, id, logging);
             }
 
             printf("Received %d tobacco!\n", increment);
@@ -66,7 +72,7 @@ int main(int argc, char**argv) {
             int result = *smoker_proc_1(&info, client);
             if (result != ENOUGH) {
                 printf("Not enough paper, and I will go kill myself!\n");
-                destroy(client, id);
+                destroy(client, id, logging);
             }
 
             printf("Received %d paper!\n", increment);
@@ -79,7 +85,7 @@ int main(int argc, char**argv) {
             int result = *smoker_proc_1(&info, client);
             if (result != ENOUGH) {
                 printf("Not enough matches, and I will go kill myself!\n");
-                destroy(client, id);
+                destroy(client, id, logging);
             }
 
             printf("Received %d matches!\n", increment);
@@ -92,7 +98,7 @@ int main(int argc, char**argv) {
     }
 
     // Unreachable. Clean up just in case.
-    destroy(client, id);
+    destroy(client, id, logging);
     return EXIT_FAILURE;
 }
 
@@ -106,8 +112,8 @@ CLIENT * get_client(char * server_hostname) {
     return client;
 }
 
-void destroy(CLIENT * client, int id) {
-    struct smoker_id info = { id };
+void destroy(CLIENT * client, int id, int logging) {
+    struct smoker_id info = { id, logging };
     smoker_exit_1(&info, client);
 	clnt_destroy(client);
 	_exit(EXIT_SUCCESS);
