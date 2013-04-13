@@ -34,6 +34,13 @@ int main(int argc, char**argv) {
             id,
             increment);
 
+    // Wait for other clients to get the message.
+    mssleep(500);
+    mssleep(500);
+    mssleep(500);
+    mssleep(500);
+    mssleep(500);
+
     // Begin smoking.
     int tobac = 0;
     int paper = 0;
@@ -81,7 +88,7 @@ int main(int argc, char**argv) {
         //Smoke!
         printf("Smoking...\n");
         fflush(NULL);
-        mssleep(300);
+        mssleep(500);
     }
 
     // Unreachable. Clean up just in case.
