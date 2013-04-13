@@ -1,0 +1,82 @@
+ Activating smoker 0. 1 active.
+ Activating smoker 2. 2 active.
+ Activating smoker 1. 3 active.
+Resources requested by smoker 1.
+Server Receiving request from smoker 1 for 2 tobacco.
+3 active smokers: 1 1 1
+Resources requested by smoker 1.
+Server Receiving request from smoker 1 for 2 paper.
+3 active smokers: 1 1 1
+Resources requested by smoker 1.
+Server Receiving request from smoker 1 for 2 matches.
+3 active smokers: 1 1 1
+Resources requested by smoker 2.
+Server Receiving request from smoker 2 for 3 tobacco.
+3 active smokers: 1 1 1
+Resources requested by smoker 2.
+Server Receiving request from smoker 2 for 3 paper.
+3 active smokers: 1 1 1
+Resources requested by smoker 2.
+Server Receiving request from smoker 2 for 3 matches.
+3 active smokers: 1 1 1
+Resources requested by smoker 0.
+Server Receiving request from smoker 0 for 3 tobacco.
+3 active smokers: 1 1 1
+Resources requested by smoker 0.
+Server Receiving request from smoker 0 for 3 paper.
+3 active smokers: 1 1 1
+Resources requested by smoker 0.
+Server Receiving request from smoker 0 for 3 matches.
+3 active smokers: 1 1 1
+Resources requested by smoker 1.
+Server Receiving request from smoker 1 for 2 tobacco.
+3 active smokers: 1 1 1
+Resources requested by smoker 1.
+Server Receiving request from smoker 1 for 2 paper.
+3 active smokers: 1 1 1
+Resources requested by smoker 1.
+Server Receiving request from smoker 1 for 2 matches.
+3 active smokers: 1 1 1
+Resources requested by smoker 2.
+Server Receiving request from smoker 2 for 3 tobacco.
+3 active smokers: 1 1 1
+Resources requested by smoker 2.
+Server Receiving request from smoker 2 for 3 paper.
+3 active smokers: 1 1 1
+Resources requested by smoker 2.
+Server Receiving request from smoker 2 for 3 matches.
+3 active smokers: 1 1 1
+Resources requested by smoker 0.
+Server Receiving request from smoker 0 for 3 tobacco.
+3 active smokers: 1 1 1
+Resources requested by smoker 0.
+Server Receiving request from smoker 0 for 3 paper.
+3 active smokers: 1 1 1
+Resources requested by smoker 0.
+Server Receiving request from smoker 0 for 3 matches.
+3 active smokers: 1 1 1
+Resources requested by smoker 1.
+Server Receiving request from smoker 1 for 2 tobacco.
+3 active smokers: 1 1 1
+Resources requested by smoker 1.
+Server Receiving request from smoker 1 for 2 paper.
+3 active smokers: 1 1 1
+Resources requested by smoker 1.
+Server Receiving request from smoker 1 for 2 matches.
+3 active smokers: 1 1 1
+Resources requested by smoker 2.
+Server Receiving request from smoker 2 for 3 tobacco.
+3 active smokers: 1 1 1
+Resources requested by smoker 2.
+Server Receiving request from smoker 2 for 3 paper.
+3 active smokers: 1 1 1
+Resources requested by smoker 0.
+Server Receiving request from smoker 0 for 3 tobacco.
+2 active smokers: 1 1 0
+Resources requested by smoker 0.
+Server Receiving request from smoker 0 for 3 paper.
+2 active smokers: 1 1 0
+Resources requested by smoker 1.
+Server Receiving request from smoker 1 for 2 tobacco.
+1 active smokers: 0 1 0
+Request for Termination Received. Terminating.
