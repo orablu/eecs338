@@ -36,6 +36,8 @@ int * smoker_proc_1_svc(struct smoker_info * in, struct svc_req * rqstp) {
     printf("Resources requested by smoker %d.\n", in->id);
     fflush(NULL);
 
+    static int result;
+
     // Add the smoker to the active pool if necessary.
     if (!smoker_active[in->id]) {
         smoker_active[in->id] = 1;
@@ -46,11 +48,13 @@ int * smoker_proc_1_svc(struct smoker_info * in, struct svc_req * rqstp) {
 
     if (materials[in->material] > in->amount) {
         materials[in->material] -= in->amount;
-        return ENOUGH;
+        result = ENOUGH;
     }
     else {
-        return NOTENOUGH;
+        result = NOTENOUGH;
     }
+
+    return &result;
 }
 
 void * smoker_exit_1_svc(struct smoker_id * in, struct svc_req * rqstp) {
