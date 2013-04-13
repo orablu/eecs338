@@ -28,7 +28,7 @@ int * smoker_start_1_svc(struct smoker_id * in, struct svc_req * rqstp) {
     printf("\n");
     fflush(NULL);
 
-    result = (active < SMOKERCOUNT);
+    result = (active >= SMOKERCOUNT);
     return &result;
 }
 
