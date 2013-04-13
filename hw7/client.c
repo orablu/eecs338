@@ -8,8 +8,8 @@ void     destroy(CLIENT * client, int id, int logging);
 void     mssleep(int ms);
 
 int main(int argc, char**argv) {
-	if(argc != 4) {
-		printf("Usage: ./client HOSTNAME SMOKERID INCREMENT\n");
+	if(argc < 4) {
+		printf("Usage: ./client HOSTNAME SMOKERID INCREMENT {LOGGING}\n");
 		return EXIT_FAILURE;
 	}
 
