@@ -27,7 +27,7 @@ int main(int argc, char**argv) {
         if (*result == 1) {
             break;
         }
-        mssleep(1000);
+        mssleep(500);
     }
 
     printf("I am smoker %d. I get resources in increments of %d. Smoking.\n",

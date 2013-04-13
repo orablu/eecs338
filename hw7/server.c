@@ -15,6 +15,7 @@ char active = 0;
 void _log(smoker_info * in);
 
 int * smoker_start_1_svc(struct smoker_id * in, struct svc_req * rqstp) {
+    static int result;
     printf("Queried to start by smoker %d.", in->id);
 
     // Add the smoker to the active pool if necessary.
@@ -27,14 +28,8 @@ int * smoker_start_1_svc(struct smoker_id * in, struct svc_req * rqstp) {
     printf("\n");
     fflush(NULL);
 
-    if (active < SMOKERCOUNT) {
-        static int nocanstart = 0;
-        return &nocanstart;
-    }
-    else {
-        static int canstart = 1;
-        return &canstart;
-    }
+    result = (active < SMOKERCOUNT);
+    return &result;
 }
 
 int * smoker_proc_1_svc(struct smoker_info * in, struct svc_req * rqstp) {
