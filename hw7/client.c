@@ -81,7 +81,7 @@ int main(int argc, char**argv) {
         //Smoke!
         printf("Smoking...\n");
         fflush(NULL);
-        mssleep(50);
+        mssleep(300);
     }
 
     // Unreachable. Clean up just in case.
@@ -103,7 +103,7 @@ void destroy(CLIENT * client, int id) {
     struct smoker_id info = { id };
     smoker_exit_1(&info, client);
 	clnt_destroy(client);
-	return EXIT_SUCCESS;
+	_exit(EXIT_SUCCESS);
 }
 
 void mssleep(int ms) {
