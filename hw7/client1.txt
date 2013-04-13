@@ -1,0 +1,23 @@
+Waiting for other smokers...
+I am smoker 1. I get resources in increments of 2. Smoking.
+Not enough tobacco, asking for more.
+Received 2 tobacco!
+Not enough paper, asking for more.
+Received 2 paper!
+Not enough matches, asking for more.
+Received 2 matches!
+Smoking...
+Not enough tobacco, asking for more.
+Received 2 tobacco!
+Not enough paper, asking for more.
+Received 2 paper!
+Not enough matches, asking for more.
+Received 2 matches!
+Smoking...
+Not enough tobacco, asking for more.
+Received 2 tobacco!
+Not enough paper, asking for more.
+Received 2 paper!
+Not enough matches, asking for more.
+Received 2 matches!
+Smoking...
