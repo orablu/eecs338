@@ -27,7 +27,10 @@ int * smoker_start_1_svc(struct smoker_id * in, struct svc_req * rqstp) {
         printf(" Activating smoker %d. %d active.", in->id, active);
     }
 
-    printf("\n");
+    if (in->logging || !smoker_active[in->id]) {
+        printf("\n");
+    }
+
     fflush(NULL);
 
     result = (active >= SMOKERCOUNT);
