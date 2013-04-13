@@ -22,7 +22,7 @@ int main(int argc, char**argv) {
     printf("Waiting for other smokers...\n");
     while (1) {
         struct smoker_id info = { id };
-        if (smoker_start_1(&info, client)) {
+        if (*smoker_start_1(&info, client)) {
             break;
         }
         mssleep(100);
